@@ -1,3 +1,7 @@
+# Composer front-end libraries.
+public/lib/jquery/
+public/lib/bootstrap/
+
 # BBEdit files
 *.bbprojectd/
 
