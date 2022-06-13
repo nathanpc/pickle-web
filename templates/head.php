@@ -16,3 +16,22 @@
 	<script src="<?= href('/lib/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
 </head>
 <body>
+	<!-- Navigation Bar -->
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+		<a class="navbar-brand" href="<?= SITE_URL ?>"><?= APP_NAME ?></a>
+
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav">
+				<li class="nav-item active">
+					<a class="nav-link" href="<?= SITE_URL ?>">Home <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="<?= href('/archives/'); ?>">Archives</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
