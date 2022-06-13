@@ -2,5 +2,7 @@ DirectoryIndex index.php
 
 RewriteEngine On 
 RewriteRule ^$ public/index.php [L]
+RewriteRule ^archive/?$ public/archive.php [L]
+RewriteRule ^about/?$ public/about.php [L]
 RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
 

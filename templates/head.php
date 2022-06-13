@@ -33,10 +33,10 @@
 					<a class="nav-link" href="<?= SITE_URL ?>">Home <span class="sr-only">(current)</span></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="<?= href('/archives/') ?>">Archives</a>
+					<a class="nav-link" href="<?= href('/archive') ?>">Archive</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="<?= href('/about/') ?>">About</a>
+					<a class="nav-link" href="<?= href('/about') ?>">About</a>
 				</li>
 			</ul>
 		</div>

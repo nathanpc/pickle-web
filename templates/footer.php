@@ -1,7 +1,7 @@
 	</main>
 
 	<!-- Footer -->
-	<footer>
+	<footer class="container">
 		<hr>
 		<div class="container">
 			<div class="row">

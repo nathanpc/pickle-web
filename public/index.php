@@ -9,7 +9,7 @@
 
 	<p>PickLE documents are simple, human-readable, component pick list declaration files for your projects. Gone are the days of printing out BOMs and crossing out parts you've already retrieved from your parts bins.</p>
 
-	<a class="btn btn-primary btn-lg" href="<?= href('/about/') ?>" role="button">Learn more</a>
+	<a class="btn btn-primary btn-lg" href="<?= href('/about') ?>" role="button">Learn more</a>
 </div>
 
 <?php require(__DIR__ . "/../templates/footer.php"); ?>
