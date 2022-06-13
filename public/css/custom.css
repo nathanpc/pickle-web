@@ -1,0 +1,16 @@
+/**
+ * custom.css
+ * Minor customizations to tweak Bootstrap.
+ * 
+ * @author Nathan Campos <nathan@innoveworkshop.com>
+ */
+
+main {
+	margin-top: 85px;
+}
+
+footer {
+	max-width: 1000px;
+	padding: 0 15px;
+	margin: auto;
+}
