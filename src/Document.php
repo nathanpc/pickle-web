@@ -27,7 +27,73 @@ class Document {
 	 * @param string $file File to be parsed.
 	 */
 	public static function FromFile($file) {
-		// TODO
+		// Open the file.
+		$handle = fopen($file, "r");
+		if (!$handle)
+			throw new Exception("Error while trying to open file $file");
+
+		// Go through the file line-by-line.
+		$stage = "empty";
+		$categories = array();
+		$category = NULL;
+		$component = NULL;
+		while (($line = fgets($handle)) !== false) {
+			// Clean up before parsing.
+			$line = trim($line);
+
+			if ($stage == "empty") {
+				if (Component::IsDescriptorLine($line)) {
+					// Make sure we have a category defined.
+					if (is_null($category)) {
+						throw new Exception("Trying to create a component without parent category");
+					}
+					
+					// Change the stage and parse a new component.
+					$component = Component::FromDescriptorLine($line);
+					$stage = "refdes";
+					continue;
+				} else if (Category::IsCategoryLine($line)) {
+					// Check if we need to commit our parsed category first.
+					if ($category != NULL)
+						array_push($categories, $category);
+
+					// Create the new category.
+					$category = Category::FromCategoryLine($line);
+					$stage = "empty";
+					continue;
+				} else if ($line == "") {
+					// Just another empty line...
+					continue;
+				}
+			} else if ($stage == "refdes") {
+				// Looks like we've finished parsing this component.
+				if ($line == "") {
+					// Add component to the category.
+					$category->add_component($component);
+					
+					// Reset everything.
+					$component = NULL;
+					$stage = "empty";
+					continue;
+				}
+
+				// Parse the reference designators and add the component.
+				$component->parse_refdes_line($line);
+				$category->add_component($component);
+				$stage = "empty";
+				continue;
+			}
+		}
+
+		// Make sure the last parsed category is accounted for.
+		if ($category != NULL)
+			array_push($categories, $category);
+
+		// Close the file handle.
+		fclose($handle);
+
+		// Construct ourselves and return.
+		return new Document($categories);
 	}
 
 	/**
@@ -37,6 +103,7 @@ class Document {
 	 */
 	public static function FromString($contents) {
 		// TODO
+		throw new Exception("Not yet implemented");
 	}
 
 	/**
