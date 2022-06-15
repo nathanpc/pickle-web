@@ -12,6 +12,8 @@ require __DIR__ . "/../vendor/autoload.php";
 class Document {
 	private $categories;
 
+	private const ARCHIVE_DIR = __DIR__ . "/../resources/pkl/";
+
 	/**
 	 * Constructs an empty document object.
 	 * 
@@ -94,6 +96,20 @@ class Document {
 
 		// Construct ourselves and return.
 		return new Document($categories);
+	}
+
+	/**
+	 * Constructs a document object given a pick list archive name.
+	 * 
+	 * @param string  $name     Document name in the archives folder.
+	 * @param boolean $sanitize Sanitize the name before using it.
+	 */
+	public static function FromArchive($name, $sanitize = true) {
+		// Make sure the string is clean and safe.
+		if ($sanitize)
+			$name = preg_replace('/[^0-9a-zA-Z\-_]/', '', $name);
+
+		return Document::FromFile(Document::ARCHIVE_DIR . $name . '.pkl');
 	}
 
 	/**
