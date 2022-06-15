@@ -32,7 +32,8 @@ class Category {
 	 * @return Categroy       Pre-populated category object.
 	 */
 	public static function FromCategoryLine($line) {
-		// TODO
+		// This one is trivial. Just need to remove the colon at the end.
+		return new Category(substr($line, 0, -1));
 	}
 
 	/**
