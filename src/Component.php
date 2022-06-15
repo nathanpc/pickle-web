@@ -48,7 +48,7 @@ class Component {
 		$component = new Component();
 
 		// Use our super complicated regular expression to parse the line.
-		preg_match('/\[(?<picked>.)\]\s+(?<quantity>\d+)\s+(?<name>[^\s]+)\s*(\((?<value>[^\)]+)\)\s*)?(""(?<description>[^\""]+)""\s*)?(\[(?<case>[^\]]+)\]\s*)?/', $line, $m);
+		preg_match('/\[(?<picked>.)\]\s+(?<quantity>\d+)\s+(?<name>[^\s]+)\s*(\((?<value>[^\)]+)\)\s*)?("(?<description>[^\"]+)"\s*)?(\[(?<case>[^\]]+)\]\s*)?/', $line, $m);
 		
 		// Populate the mandatory attributes of the object.
 		$component->picked = ($m["picked"] != ' ');
