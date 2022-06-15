@@ -45,7 +45,24 @@ class Component {
 	 * @return Component       Pre-populated component object.
 	 */
 	public static function FromDescriptorLine($line) {
-		// TODO
+		$component = new Component();
+
+		// Use our super complicated regular expression to parse the line.
+		preg_match('/\[(?<picked>.)\]\s+(?<quantity>\d+)\s+(?<name>[^\s]+)\s*(\((?<value>[^\)]+)\)\s*)?(""(?<description>[^\""]+)""\s*)?(\[(?<case>[^\]]+)\]\s*)?/', $line, $m);
+		
+		// Populate the mandatory attributes of the object.
+		$component->picked = ($m["picked"] != ' ');
+		$component->name = $m["name"];
+
+		// Go through populating the rest of the object.
+		if (array_key_exists("value", $m))
+			$component->value = $m["value"];
+		if (array_key_exists("description", $m))
+			$component->description = $m["description"];
+		if (array_key_exists("case", $m))
+			$component->package = $m["case"];
+
+		return $component;
 	}
 
 	/**
@@ -78,7 +95,7 @@ class Component {
 	 * Gets the quantity of the component that needs to be picked based on the
 	 * number of reference designators the component has.
 	 * 
-	 * @return int Number of components that needs to be picked.
+	 * @return integer Number of components that needs to be picked.
 	 */
 	public function get_quantity() {
 		return count($this->refdes);
