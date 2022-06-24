@@ -6,6 +6,7 @@
 </h3>
 
 <?php $picklist = PickLE\Document::FromArchive($_GET["archive"]); ?>
+<?php $lot_size = intval(urlparam('lot', 1)); ?>
 
 <?php foreach ($picklist->get_categories() as $category) { ?>
 	<h3><?= $category->get_name() ?></h3>
@@ -27,7 +28,7 @@
 				<?php foreach ($category->get_components() as $component) { ?>
 					<tr>
 						<td class="text-center"><input type="checkbox"></td>
-						<td class="text-center"><?= $component->get_quantity() ?></td>
+						<td class="text-center"><?= $component->get_quantity() * $lot_size ?></td>
 						<th scope="row"><?= $component->get_name() ?></th>
 						<td><?= $component->get_value() ?></td>
 						<td><?= implode(' ', $component->get_refdes()) ?></td>

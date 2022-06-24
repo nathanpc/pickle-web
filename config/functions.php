@@ -34,3 +34,19 @@ function site_title($desc = NULL) {
 function href($loc) {
 	return SITE_URL . $loc;
 }
+
+/**
+ * Gets the value of an URL parameter or uses a default if one wasn't provided.
+ * 
+ * @param  string $name    Parameter name (key in $_GET).
+ * @param  any    $default Default value in case the parameter wasn't set.
+ * @return any             Parameter value provided or the default.
+ */
+function urlparam($name, $default = NULL) {
+	// Should we use the default value?
+	if (!isset($_GET[$name]))
+		return $default;
+
+	// We've got it.
+	return $_GET[$name];
+}
