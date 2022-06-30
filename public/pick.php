@@ -12,28 +12,28 @@
 	<h3><?= $category->get_name() ?></h3>
 
 	<div class="table-responsive-lg">
-		<table class="table table-striped">
+		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
-					<th scope="col" class="text-center">Picked</th>
-					<th scope="col" class="text-center">Quantity</th>
-					<th scope="col">Part #</th>
-					<th scope="col">Value</th>
-					<th scope="col">Reference Designators</th>
-					<th scope="col">Description</th>
-					<th scope="col">Package</th>
+					<th scope="col" class="col-1 text-center">Picked</th>
+					<th scope="col" class="col-1 text-center">Quantity</th>
+					<th scope="col" class="col-2">Part #</th>
+					<th scope="col" class="col-1 text-center">Value</th>
+					<th scope="col" class="col-4">Reference Designators</th>
+					<th scope="col" class="col-2">Description</th>
+					<th scope="col" class="col-1">Package</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php foreach ($category->get_components() as $component) { ?>
-					<tr>
-						<td class="text-center"><input type="checkbox"></td>
-						<td class="text-center"><?= $component->get_quantity() * $lot_size ?></td>
-						<th scope="row"><?= $component->get_name() ?></th>
-						<td><?= $component->get_value() ?></td>
-						<td><?= implode(' ', $component->get_refdes()) ?></td>
-						<td><?= $component->get_description() ?></td>
-						<td><?= $component->get_package() ?></td>
+					<tr onclick="alert('#<?= $chk_id ?>')">
+						<td class="col-1 text-center"><input type="checkbox"></td>
+						<td class="col-1 text-center"><?= $component->get_quantity() * $lot_size ?></td>
+						<th scope="row" class="col-2"><?= $component->get_name() ?></th>
+						<td class="col-1 text-center"><?= $component->get_value() ?></td>
+						<td class="col-4"><?= implode(' ', $component->get_refdes()) ?></td>
+						<td class="col-2"><?= $component->get_description() ?></td>
+						<td class="col-1"><?= $component->get_package() ?></td>
 					</tr>
 				<?php } ?>
 			</tbody>
