@@ -8,3 +8,8 @@
 main {
 	margin-top: 85px;
 }
+
+.refdes-crossed {
+	text-decoration: line-through;
+	opacity: 50%;
+}
