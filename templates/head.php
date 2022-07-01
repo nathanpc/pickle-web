@@ -17,6 +17,7 @@
 
 	<!-- Custom -->
 	<link rel="stylesheet" href="<?= href('/css/custom.css') ?>">
+	<script src="<?= href('/js/functions.js') ?>"></script>
 </head>
 <body>
 	<!-- Navigation Bar -->
