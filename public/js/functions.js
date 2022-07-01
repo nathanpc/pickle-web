@@ -13,7 +13,7 @@
  *
  * @param {string} checkbox_id  The checkbox identifier.
  */
-function toggle_checkbox(checkbox_id) {
+function toggleCheckboxCheck(checkbox_id) {
 	var checkbox = $("#" + checkbox_id);
 	checkbox.prop("checked", !checkbox.prop("checked"));
 }
@@ -24,7 +24,7 @@ function toggle_checkbox(checkbox_id) {
  * @param {element} elem  The element to have the strikethrough class toggled.
  * @param {event}   event Event handler for the function. Optional.
  */
-function toggle_strikethrough(elem, event) {
+function toggleStrikethrough(elem, event) {
 	$(elem).toggleClass("refdes-crossed");
 	
 	// Block the propagation?
@@ -39,7 +39,7 @@ function toggle_strikethrough(elem, event) {
  *
  * @param {event} event The event object of the element to be used to block.
  */
-function prevent_dblclickhighlight(event) {
+function preventDblClickHighlight(event) {
 	if (event.detail <= 1)
 		return;
 	

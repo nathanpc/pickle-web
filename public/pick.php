@@ -29,14 +29,14 @@
 				<?php foreach ($category->get_components() as $component) { ?>
 					<?php $chk_id = 'chk-comp-' . $index++; ?>
 
-					<tr onclick="toggle_checkbox('<?= $chk_id ?>')" onmousedown="prevent_dblclickhighlight(event)">
+					<tr onclick="toggleCheckboxCheck('<?= $chk_id ?>')" onmousedown="preventDblClickHighlight(event)">
 						<td class="col-1 text-center"><input id="<?= $chk_id ?>" type="checkbox"></td>
 						<td class="col-1 text-center"><?= $component->get_quantity() * $lot_size ?></td>
 						<th scope="row" class="col-2"><?= $component->get_name() ?></th>
 						<td class="col-1 text-center"><?= $component->get_value() ?></td>
 						<td class="col-4">
 							<?php foreach ($component->get_refdes() as $refdes) { ?>
-								<span class="refdes" onclick="toggle_strikethrough(this, event)" onmousedown="prevent_dblclickhighlight(event)"><?= $refdes ?></span>
+								<span class="refdes" onclick="toggleStrikethrough(this, event)" onmousedown="preventDblClickHighlight(event)"><?= $refdes ?></span>
 							<?php } ?>
 						</td>
 						<td class="col-2"><?= $component->get_description() ?></td>
