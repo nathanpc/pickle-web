@@ -1,0 +1,6 @@
+DirectoryIndex index.php
+
+RewriteEngine On
+RewriteRule ^archive/?$ archive.php [L]
+RewriteRule ^about/?$ about.php [L]
+RewriteRule ^pick/?$ pick.php [L]
