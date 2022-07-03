@@ -1,12 +1,13 @@
+<?php require_once __DIR__ . "/../config/functions.php"; ?>
+<?php require_once __DIR__ . "/../vendor/autoload.php"; ?>
+<?php $picklist = PickLE\Document::FromArchive($_GET["archive"]); ?>
+<?php $lot_size = intval(urlparam('lotsize', 1)); ?>
 <?php require(__DIR__ . "/../templates/head.php"); ?>
 
 <h3>
 	Pick List
 	<small class="text-muted">Everything that we need to pick up</small>
 </h3>
-
-<?php $picklist = PickLE\Document::FromArchive($_GET["archive"]); ?>
-<?php $lot_size = intval(urlparam('lot', 1)); ?>
 
 <?php $index = 0; ?>
 <?php foreach ($picklist->get_categories() as $category) { ?>

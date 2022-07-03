@@ -10,9 +10,10 @@ namespace PickLE;
 require __DIR__ . "/../vendor/autoload.php";
 
 class Document {
+	private $archive_name;
 	private $categories;
 
-	private const ARCHIVE_DIR = __DIR__ . "/../resources/pkl/";
+	protected const ARCHIVE_DIR = __DIR__ . "/../resources/pkl/";
 
 	/**
 	 * Constructs an empty document object.
@@ -20,6 +21,7 @@ class Document {
 	 * @param array $categories Categories of components to be picked.
 	 */
 	public function __construct($categories = array()) {
+		$this->archive_name = NULL;
 		$this->categories = $categories;
 	}
 
@@ -29,6 +31,10 @@ class Document {
 	 * @param string $file File to be parsed.
 	 */
 	public static function FromFile($file) {
+		// Construct ourselves and set our archive name.
+		$doc = new Document();
+		$doc->set_archive_name(basename($file, '.pkl'));
+
 		// Open the file.
 		$handle = fopen($file, "r");
 		if (!$handle)
@@ -94,8 +100,9 @@ class Document {
 		// Close the file handle.
 		fclose($handle);
 
-		// Construct ourselves and return.
-		return new Document($categories);
+		// Populate the categories array and return ourselves.
+		$doc->set_categories($categories);
+		return $doc;
 	}
 
 	/**
@@ -115,11 +122,31 @@ class Document {
 	/**
 	 * Constructs a document object given a pick list document contents string.
 	 * 
+	 * @param string $name     Archive name.
 	 * @param string $contents Document contents to be parsed.
 	 */
-	public static function FromString($contents) {
+	public static function FromString($name, $contents) {
+		$this->archive_name = $name;
 		// TODO
 		throw new Exception("Not yet implemented");
+	}
+
+	/**
+	 * Gets the archive name of this document.
+	 * 
+	 * @return string Achive name of the document.
+	 */
+	public function get_archive_name() {
+		return $this->archive_name;
+	}
+
+	/**
+	 * Sets the archive name of this document.
+	 * 
+	 * @param string $name Achive name of the document.
+	 */
+	public function set_archive_name($name) {
+		$this->archive_name = $name;
 	}
 
 	/**

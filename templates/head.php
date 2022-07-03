@@ -43,7 +43,7 @@ function nav_item($label, $href, $pagename) {
 <body>
 	<!-- Navigation Bar -->
 	<nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
-		<a class="navbar-brand" href="<?= SITE_URL ?>"><?= APP_NAME ?></a>
+		<a class="navbar-brand" href="<?= href('/') ?>"><?= APP_NAME ?></a>
 
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -51,14 +51,15 @@ function nav_item($label, $href, $pagename) {
 
 		<div class="collapse navbar-collapse" id="navbarNav">
 			<ul class="navbar-nav mr-auto">
-				<?= nav_item('Home', SITE_URL, 'index') ?>
+				<?= nav_item('Home', '/', 'index') ?>
 				<?= nav_item('Archive', '/archive', 'archive') ?>
 				<?= nav_item('About', '/about', 'about') ?>
 			</ul>
 
 			<?php if (is_parent_page('pick')) { ?>
-				<form class="form-inline my-2 my-lg-0">
-					<input class="form-control mr-sm-2" type="number" placeholder="Lot Size" aria-label="Lot Size">
+				<form class="form-inline my-2 my-lg-0" method="GET" action="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?>">
+					<input type="hidden" name="archive" value="<?= $picklist->get_archive_name() ?>">
+					<input class="form-control mr-sm-2" type="number" name="lotsize" placeholder="Lot Size" aria-label="Lot Size" min="1" <?= ($lot_size > 1) ? 'value="' . $lot_size . '"' : '' ?>>
 					<button class="btn btn-outline-light" type="submit">Apply</button>
 				</form>
 			<?php } ?>
