@@ -26,6 +26,16 @@ function site_title($desc = NULL) {
 }
 
 /**
+ * Checks if a parent page name matches the current page name.
+ * 
+ * @param  string  $parent Parent page script name without the extension.
+ * @return boolean         Are the page names the same?
+ */
+function is_parent_page($parent) {
+	return basename($_SERVER['PHP_SELF'], '.php') == $parent;
+}
+
+/**
  * Creates a proper href location based on our project's root path.
  *
  * @param  string $loc Location as if the resource was in the root of the server.

@@ -3,6 +3,27 @@
 <?php require_once __DIR__ . "/../config/config.php"; ?>
 <?php require_once __DIR__ . "/../config/functions.php"; ?>
 <?php require_once __DIR__ . "/../vendor/autoload.php"; ?>
+<?php
+/**
+ * Generates a Bootstrap Navbar item.
+ * 
+ * @param  string $label    Label of the item.
+ * @param  string $href     Relative URL this item points to or a full URL.
+ * @param  string $pagename Destination page script name without the extension.
+ * @return string           Fully-populated Bootstrap navbar item.
+ */
+function nav_item($label, $href, $pagename) {
+	// Are we the current page?
+	$current = is_parent_page($pagename);
+
+	// Make sure we deal with relative URLs.
+	if ($href[0] == '/')
+		$href = href($href);
+
+	// Build up some HTML.
+	return '<li class="nav-item' . (($current) ? ' active' : '') . '"><a class="nav-link" href="' . $href . '">' . $label . (($current) ? ' <span class="sr-only">(current)</span>' : '') . '</a></li>';
+}
+?>
 <head>
 	<meta charset="utf-8" />
 	<title><?= site_title((defined('PAGE_TITLE')) ? PAGE_TITLE : NULL) ?></title>
@@ -29,17 +50,18 @@
 		</button>
 
 		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="navbar-nav">
-				<li class="nav-item active">
-					<a class="nav-link" href="<?= SITE_URL ?>">Home <span class="sr-only">(current)</span></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="<?= href('/archive') ?>">Archive</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="<?= href('/about') ?>">About</a>
-				</li>
+			<ul class="navbar-nav mr-auto">
+				<?= nav_item('Home', SITE_URL, 'index') ?>
+				<?= nav_item('Archive', '/archive', 'archive') ?>
+				<?= nav_item('About', '/about', 'about') ?>
 			</ul>
+
+			<?php if (is_parent_page('pick')) { ?>
+				<form class="form-inline my-2 my-lg-0">
+					<input class="form-control mr-sm-2" type="number" placeholder="Lot Size" aria-label="Lot Size">
+					<button class="btn btn-outline-light" type="submit">Apply</button>
+				</form>
+			<?php } ?>
 		</div>
 	</nav>
 
