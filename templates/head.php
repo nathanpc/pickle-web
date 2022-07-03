@@ -36,6 +36,9 @@ function nav_item($label, $href, $pagename) {
 	<link rel="stylesheet" href="<?= href('/lib/bootstrap/css/bootstrap.min.css') ?>">
 	<script src="<?= href('/lib/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
 
+	<!-- Confetti -->
+	<script src="<?= href('/lib/canvas-confetti/confetti.browser.min.js') ?>"></script>
+
 	<!-- Custom -->
 	<link rel="stylesheet" href="<?= href('/css/custom.css') ?>">
 	<script src="<?= href('/js/functions.js') ?>"></script>

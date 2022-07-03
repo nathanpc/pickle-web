@@ -30,8 +30,8 @@
 				<?php foreach ($category->get_components() as $component) { ?>
 					<?php $chk_id = 'chk-comp-' . $index++; ?>
 
-					<tr onclick="toggleCheckboxCheck('<?= $chk_id ?>')" onmousedown="preventDblClickHighlight(event)">
-						<td class="col-1 text-center"><input id="<?= $chk_id ?>" type="checkbox" onclick="event.stopPropagation()"></td>
+					<tr onclick="toggleCheckboxCheck(event, '<?= $chk_id ?>')" onmousedown="preventDblClickHighlight(event)">
+						<td class="col-1 text-center"><input id="<?= $chk_id ?>" class="chk-picked" type="checkbox" onclick="toggleCheckboxCheck(event)"></td>
 						<td class="col-1 text-center"><?= $component->get_quantity() * $lot_size ?></td>
 						<th scope="row" class="col-2"><?= $component->get_name() ?></th>
 						<td class="col-1 text-center"><?= $component->get_value() ?></td>
