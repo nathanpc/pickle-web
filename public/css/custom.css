@@ -13,3 +13,7 @@ main {
 	text-decoration: line-through;
 	opacity: 50%;
 }
+
+#lotsize {
+	max-width: 6.5em;
+}
