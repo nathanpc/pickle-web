@@ -31,7 +31,7 @@
 					<?php $chk_id = 'chk-comp-' . $index++; ?>
 
 					<tr onclick="toggleCheckboxCheck('<?= $chk_id ?>')" onmousedown="preventDblClickHighlight(event)">
-						<td class="col-1 text-center"><input id="<?= $chk_id ?>" type="checkbox"></td>
+						<td class="col-1 text-center"><input id="<?= $chk_id ?>" type="checkbox" onclick="event.stopPropagation()"></td>
 						<td class="col-1 text-center"><?= $component->get_quantity() * $lot_size ?></td>
 						<th scope="row" class="col-2"><?= $component->get_name() ?></th>
 						<td class="col-1 text-center"><?= $component->get_value() ?></td>
