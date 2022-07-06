@@ -4,11 +4,28 @@
 <?php $lot_size = intval(urlparam('lotsize', 1)); ?>
 <?php require(__DIR__ . "/../templates/head.php"); ?>
 
+<!-- Document Information -->
 <h3>
-	Pick List
-	<small class="text-muted">Everything that we need to pick up</small>
+	<?= $picklist->get_property('Name') ?>
+	<small class="text-muted">Rev <?= $picklist->get_property('Revision') ?></small>
 </h3>
+<p class="lead"><?= $picklist->get_property('Description') ?></p>
 
+<!-- Optional Properties -->
+<dl id="doc-properties" class="row mb-0 d-none">
+	<?php foreach ($picklist->get_properties() as $property) { ?>
+		<?php if (($property->get_name() != 'Name') && ($property->get_name() != 'Description') && ($property->get_name() != 'Revision')) { ?>
+			<dt class="col-sm-2"><?= $property->get_pretty_name() ?></dt>
+			<dd class="col-sm-10"><?= $property->get_value() ?></dd>
+		<?php } ?>
+	<?php } ?>
+</dl>
+<div class="container text-center">
+	<button type="button" class="btn btn-link" onclick="toggleElementVisibility('#doc-properties', this)">More Information</button>
+</div>
+<br>
+
+<!-- Actual Pick List -->
 <?php $index = 0; ?>
 <?php foreach ($picklist->get_categories() as $category) { ?>
 	<h3><?= $category->get_name() ?></h3>

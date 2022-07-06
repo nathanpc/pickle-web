@@ -60,6 +60,44 @@ function preventDblClickHighlight(event) {
 }
 
 /**
+ * Toggles the visibility of the specified element.
+ *
+ * @param {string}  elem    XPath of the element to have its visibility toggled.
+ * @param {element} sender  Optional. Element object that triggered this event
+ *                          to have its innerHTML property changed.
+ * @param {string}  moremsg Optional. 'More Information' message that the sender
+ *                          is supposed to display. (Default: "More Information")
+ * @param {string}  lessmsg Optional. 'Less Information' message that the sender
+ *                          is supposed to display. (Default: "Less Information")
+ */
+function toggleElementVisibility(elem, sender, moremsg, lessmsg) {
+	var elem = $(elem);
+
+	// Setup some defaults just in case.
+	if (moremsg === undefined)
+		moremsg = 'More Information';
+	if (lessmsg === undefined)
+		lessmsg = 'Less Information';
+
+	// Toggle things around.
+	if (elem.hasClass('d-none')) {
+		// Turn visible.
+		elem.removeClass('d-none');
+
+		// Change the message in the sender element.
+		if (sender !== undefined)
+			sender.innerHTML = lessmsg;
+	} else {
+		// Turn invisible.
+		elem.addClass('d-none');
+
+		// Change the message in the sender element.
+		if (sender !== undefined)
+			sender.innerHTML = moremsg;
+	}
+}
+
+/**
  * Generates a random number between min (inclusive) and max (exclusive).
  *
  * @param  {number} min The minimum, inclusive, number in the range.
