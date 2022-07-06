@@ -11,6 +11,7 @@ require __DIR__ . "/../vendor/autoload.php";
 
 class Document {
 	private $archive_name;
+	private $properties;
 	private $categories;
 
 	protected const ARCHIVE_DIR = __DIR__ . "/../resources/pkl/";
@@ -18,10 +19,13 @@ class Document {
 	/**
 	 * Constructs an empty document object.
 	 * 
+	 * @param array $properties Some descriptive information about this
+	 *                          specific document.
 	 * @param array $categories Categories of components to be picked.
 	 */
-	public function __construct($categories = array()) {
+	public function __construct($properties = array(), $categories = array()) {
 		$this->archive_name = NULL;
+		$this->properties = $properties;
 		$this->categories = $categories;
 	}
 
@@ -38,11 +42,10 @@ class Document {
 		// Open the file.
 		$handle = fopen($file, "r");
 		if (!$handle)
-			throw new Exception("Error while trying to open file $file");
+			throw new Exception("Error while trying to open file '$file'");
 
 		// Go through the file line-by-line.
-		$stage = "empty";
-		$categories = array();
+		$stage = "properties";
 		$category = NULL;
 		$component = NULL;
 		while (($line = fgets($handle)) !== false) {
@@ -63,7 +66,7 @@ class Document {
 				} else if (Category::IsCategoryLine($line)) {
 					// Check if we need to commit our parsed category first.
 					if ($category != NULL)
-						array_push($categories, $category);
+						$doc->add_category($category);
 
 					// Create the new category.
 					$category = Category::FromCategoryLine($line);
@@ -90,18 +93,34 @@ class Document {
 				$category->add_component($component);
 				$stage = "empty";
 				continue;
+			} else if ($stage == "properties") {
+				// Looks like we are in the properties header.
+				if ($line == "")
+					continue;
+
+				// Have we finished parsing the properties header?
+				if ($line == "---") {
+					$stage = "empty";
+					continue;
+				}
+
+				// Check if we've got a property.
+				if (!Property::IsPropertyLine($line))
+					throw new Exception("The header section of a document must only contain properties");
+
+				// Append the property to our parsed document object.
+				$doc->add_property(Property::FromPropertyLine($line));
 			}
 		}
 
 		// Make sure the last parsed category is accounted for.
 		if ($category != NULL)
-			array_push($categories, $category);
+			$doc->add_category($category);
 
 		// Close the file handle.
 		fclose($handle);
 
-		// Populate the categories array and return ourselves.
-		$doc->set_categories($categories);
+		// Return ourselves.
 		return $doc;
 	}
 
@@ -150,6 +169,69 @@ class Document {
 	}
 
 	/**
+	 * Gets the list of properties of the document.
+	 * 
+	 * @return array List of properties of this document.
+	 */
+	public function get_properties() {
+		return $this->properties;
+	}
+
+	/**
+	 * Sets the list of properties of the document.
+	 * 
+	 * @param array $properties List of properties of this document.
+	 */
+	public function set_properties($properties) {
+		$this->properties = $properties;
+	}
+
+	/**
+	 * Adds a property to the properties list of this document.
+	 * 
+	 * @param Property $property Property to add to the list.
+	 */
+	public function add_property($property) {
+		array_push($this->properties, $property);
+	}
+
+	/**
+	 * Checks if the document has a property with a specific name.
+	 * 
+	 * @param  string  $name Name of the property to search for.
+	 * @return boolean       Do we have said property?
+	 */
+	public function has_property($name) {
+		// Go through our properties trying to find this one.
+		foreach ($this->properties as $property) {
+			// Have we found it?
+			if ($property->get_name() == $name)
+				return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Gets a specific property from the document.
+	 * 
+	 * @param  string $name Property name to get.
+	 * @return string       Requested property value or an empty string if the
+	 *                      requested property didn't exist.
+	 */
+	public function get_property($name) {
+		// Go through our properties trying to find this one.
+		foreach ($this->properties as $property) {
+			// Have we found it?
+			if ($property->get_name() == $name)
+				return $property->get_value();
+		}
+		
+		// Looks like we were unable to find anything.
+		return "";
+	}
+
+	/**
 	 * Gets the list of categories of components to be picked.
 	 * 
 	 * @return array List of categories inside this document.
@@ -172,7 +254,7 @@ class Document {
 	 * 
 	 * @param Category $category Category to add to the list.
 	 */
-	public function add_component($category) {
+	public function add_category($category) {
 		array_push($this->categories, $category);
 	}
 }

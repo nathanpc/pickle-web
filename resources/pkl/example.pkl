@@ -1,3 +1,12 @@
+Name: MintyCharger
+Revision: A
+Description: A curiously portable, USB-powered, and fully-featured, battery charger that supports all chemistries and voltages of rechargeable PP3 (9V) batteries, while fitting neatly inside an Altoids tin.
+Website: https://innoveworkshop.com/product/mintycharger
+Source-Control: https://github.com/innoveworkshop/MintyCharger/
+License: CC BY-NC-SA 4.0
+
+---
+
 Ceramic Capacitor:
 [ ]	6	C0805	(0.1u)	"Ceramic Capacitor"	[C0805]
 C1 C7 C8 C9 C10 C11
