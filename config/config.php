@@ -9,7 +9,3 @@
 // General application branding.
 define('APP_NAME', 'PickLE');
 
-// Site definitions.
-define('SITE_HOST', 'localhost');
-define('SITE_PATH', '~nathanpc/pickle');
-define('SITE_URL', 'http://' . SITE_HOST . '/' . SITE_PATH);

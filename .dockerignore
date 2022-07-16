@@ -1,0 +1,21 @@
+# Misc.
+LICENSE
+README.md
+
+# PHP and Composer
+vendor/
+
+# Editors
+**/.vscode
+
+# Git
+**/.git/
+**/.git*
+
+# Docker
+.dockerignore
+Dockerfile
+
+# Garbage
+**/.DS_Store
+

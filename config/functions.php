@@ -42,7 +42,7 @@ function is_parent_page($parent) {
  * @return string      Transposed location of the resource.
  */
 function href($loc) {
-	return SITE_URL . $loc;
+	return $loc;
 }
 
 /**
