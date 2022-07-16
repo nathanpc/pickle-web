@@ -17,13 +17,5 @@
 		"psr-4": {
 			"PickLE\\": "src/"
 		}
-	},
-	"scripts": {
-		"post-update-cmd": [
-			"rm -rf public/lib/bootstrap",
-			"cp -R vendor/twbs/bootstrap/dist public/lib/bootstrap",
-			"rm -rf public/lib/jquery",
-			"cp -R vendor/components/jquery public/lib/jquery"
-		]
 	}
 }
