@@ -4,16 +4,25 @@ WORKDIR /src/app
 COPY composer.* ./
 RUN composer install --no-dev
 
-FROM php:8-apache
+FROM debian:stable-slim
 
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
-	&& sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
-RUN a2enmod rewrite
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	apache2 \
+	curl \
+	php \
+	libapache2-mod-php \
+	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY . /var/www/html
-COPY --from=composer /src/app/vendor /var/www/html/vendor
+RUN sed -zie 's|\(<Directory /var/www/>\)\(.*\)\(</Directory>\)|\1\nOptions Indexes FollowSymLinks\nAllowOverride All\nRequire all granted\n\3|g' /etc/apache2/apache2.conf && \
+	sed -ie 's|\(DocumentRoot\)\(.*\)|\1 /var/www/public|g' /etc/apache2/sites-available/000-default.conf && \
+	a2enmod rewrite && \
+	service apache2 restart && \
+	rm -r /var/www/*
+
+COPY . /var/www/
+COPY --from=composer /src/app/vendor /var/www/vendor
 
 EXPOSE 80
+
+ENTRYPOINT [ "service", "apache2", "start" ]
 
