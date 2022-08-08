@@ -4,6 +4,9 @@ WORKDIR /src/app
 COPY composer.* ./
 RUN composer install --no-dev
 
+RUN chmod -R 755 vendor/twbs/bootstrap/dist/ && \
+	chmod -R 755 vendor/components/jquery/
+
 FROM debian:stable-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -21,8 +24,9 @@ RUN sed -zie 's|\(<Directory /var/www/>\)\(.*\)\(</Directory>\)|\1\nOptions Inde
 
 COPY . /var/www/
 COPY --from=composer /src/app/vendor /var/www/vendor
+COPY --from=composer /src/app/vendor/twbs/bootstrap/dist/ /var/www/public/lib/bootstrap/
+COPY --from=composer /src/app/vendor/components/jquery/ /var/www/public/lib/jquery/
 
 EXPOSE 80
 
-ENTRYPOINT [ "service", "apache2", "start" ]
-
+ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
