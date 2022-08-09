@@ -59,7 +59,7 @@ function nav_item($label, $href, $pagename) {
 				<?= nav_item('About', '/about', 'about') ?>
 			</ul>
 
-			<?php if (is_parent_page('pick')) { ?>
+			<?php if (is_parent_page('pick') && isset($picklist)) { ?>
 				<form class="form-inline my-2 my-lg-0" method="GET" action="<?= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?>">
 					<input type="hidden" name="archive" value="<?= $picklist->get_archive_name() ?>">
 					<input class="form-control mr-2" id="lotsize" type="number" name="lotsize" placeholder="Lot Size" aria-label="Lot Size" min="1" <?= ($lot_size > 1) ? 'value="' . $lot_size . '"' : '' ?>>

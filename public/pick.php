@@ -1,8 +1,23 @@
 <?php require_once __DIR__ . "/../config/functions.php"; ?>
 <?php require_once __DIR__ . "/../vendor/autoload.php"; ?>
-<?php $picklist = PickLE\Document::FromArchive($_GET["archive"]); ?>
+<?php $picklist = PickLE\Document::FromArchive(urlparam('archive', NULL)); ?>
 <?php $lot_size = intval(urlparam('lotsize', 1)); ?>
 <?php require(__DIR__ . "/../templates/head.php"); ?>
+
+<?php if (is_null($picklist)) { ?>
+	<!-- Archive Not Found -->
+	<?php http_response_code(404); ?>
+	<div class="jumbotron">
+		<h1 class="display-4">Archive not Found</h1>
+		<p class="lead">
+			The archive that you've requested was not found. Maybe check out the
+			<a href="<?= href('archive') ?>">archives page</a>?
+		</p>
+	</div>
+
+	<?php require(__DIR__ . "/../templates/footer.php"); ?>
+	<?php return; ?>
+<?php } ?>
 
 <!-- Document Information -->
 <h3>

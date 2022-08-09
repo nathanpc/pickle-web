@@ -39,10 +39,14 @@ class Document {
 		$doc = new Document();
 		$doc->set_archive_name(basename($file, '.pkl'));
 
+		// Check if the file exists.
+		if (!file_exists($file))
+			return NULL;
+
 		// Open the file.
 		$handle = fopen($file, "r");
 		if (!$handle)
-			throw new Exception("Error while trying to open file '$file'");
+			throw new \Exception("Error while trying to open file '$file'");
 
 		// Go through the file line-by-line.
 		$stage = "properties";
@@ -56,7 +60,7 @@ class Document {
 				if (Component::IsDescriptorLine($line)) {
 					// Make sure we have a category defined.
 					if (is_null($category)) {
-						throw new Exception("Trying to create a component without parent category");
+						throw new \Exception("Trying to create a component without parent category");
 					}
 					
 					// Change the stage and parse a new component.
@@ -130,12 +134,21 @@ class Document {
 	 * @param string  $name     Document name in the archives folder.
 	 * @param boolean $sanitize Sanitize the name before using it.
 	 */
-	public static function FromArchive($name, $sanitize = true) {
+	public static function FromArchive($name = NULL, $sanitize = true) {
+		// Do we even have an archive to deal with?
+		if (is_null($name))
+			return NULL;
+
 		// Make sure the string is clean and safe.
 		if ($sanitize)
 			$name = preg_replace('/[^0-9a-zA-Z\-_]/', '', $name);
 
-		return Document::FromFile(Document::ARCHIVE_DIR . $name . '.pkl');
+		try {
+			// Parse the archive.
+			return Document::FromFile(Document::ARCHIVE_DIR . $name . '.pkl');
+		} catch (\Exception $e) {
+			return NULL;
+		}
 	}
 
 	/**
@@ -145,9 +158,9 @@ class Document {
 	 * @param string $contents Document contents to be parsed.
 	 */
 	public static function FromString($name, $contents) {
-		$this->archive_name = $name;
 		// TODO
-		throw new Exception("Not yet implemented");
+		//$this->archive_name = $name;
+		throw new \Exception("Not yet implemented");
 	}
 
 	/**
