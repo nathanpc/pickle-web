@@ -23,10 +23,11 @@ RUN sed -zie 's|\(<Directory /var/www/>\)\(.*\)\(</Directory>\)|\1\nOptions Inde
 	service apache2 restart && \
 	rm -r /var/www/*
 
-COPY . /var/www/
-COPY --from=composer /src/app/vendor /var/www/vendor
-COPY --from=composer /src/app/vendor/twbs/bootstrap/dist/ /var/www/public/lib/bootstrap/
-COPY --from=composer /src/app/vendor/components/jquery/ /var/www/public/lib/jquery/
+WORKDIR /var/www
+COPY --from=composer /src/app/vendor ./vendor
+COPY --from=composer /src/app/vendor/twbs/bootstrap/dist/ ./public/lib/bootstrap/
+COPY --from=composer /src/app/vendor/components/jquery/ ./public/lib/jquery/
+COPY . ./
 
 EXPOSE 80
 
