@@ -10,8 +10,9 @@
 	],
 	"require": {
 		"php": ">7.4",
-		"twbs/bootstrap": "^4.6",
-		"components/jquery": "^3.6"
+		"twbs/bootstrap": "~4.6",
+		"components/jquery": "~3.6",
+		"symfony/polyfill-php80": "~1.26"
 	},
 	"autoload": {
 		"psr-4": {

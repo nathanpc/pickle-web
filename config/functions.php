@@ -6,7 +6,6 @@
  * @author Nathan Campos <nathan@innoveworkshop.com>
  */
 
-require_once __DIR__ . "/polyfills.php";
 require_once __DIR__ . "/config.php";
 
 /**
