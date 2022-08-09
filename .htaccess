@@ -1,3 +1,5 @@
+# REMEMBER TO UPDATE CHANGES AT public/.htaccess AS WELL.
+
 DirectoryIndex index.php
 
 RewriteEngine On
