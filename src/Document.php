@@ -14,7 +14,9 @@ class Document {
 	private $properties;
 	private $categories;
 
+	// Constants
 	protected const ARCHIVE_DIR = __DIR__ . "/../resources/pkl/";
+	protected const ARCHIVE_EXT = 'pkl';
 
 	/**
 	 * Constructs an empty document object.
@@ -37,7 +39,7 @@ class Document {
 	public static function FromFile($file) {
 		// Construct ourselves and set our archive name.
 		$doc = new Document();
-		$doc->set_archive_name(basename($file, '.pkl'));
+		$doc->set_archive_name(basename($file, '.' . Document::ARCHIVE_EXT));
 
 		// Check if the file exists.
 		if (!file_exists($file))
@@ -145,7 +147,7 @@ class Document {
 
 		try {
 			// Parse the archive.
-			return Document::FromFile(Document::ARCHIVE_DIR . $name . '.pkl');
+			return Document::FromFile(Document::ARCHIVE_DIR . $name . '.' . Document::ARCHIVE_EXT);
 		} catch (\Exception $e) {
 			return NULL;
 		}
@@ -164,9 +166,31 @@ class Document {
 	}
 
 	/**
+	 * Gets a list of the available archives in the resources folder.
+	 *
+	 * @return array List of Document objects of every archive in the resources
+	 *               folder.
+	 */
+	public static function ListArchives() {
+		$arr = array();
+
+		// Go through files in the archives directory.
+		foreach (scandir(Document::ARCHIVE_DIR) as $file) {
+			// Filter out any file that isn't a PickLE archive.
+			if (strcasecmp(pathinfo($file, PATHINFO_EXTENSION), Document::ARCHIVE_EXT) != 0)
+				continue;
+			
+			// Push the document into the array.
+			array_push($arr, Document::FromFile(Document::ARCHIVE_DIR . $file));
+		}
+
+		return $arr;
+	}
+
+	/**
 	 * Gets the archive name of this document.
 	 * 
-	 * @return string Achive name of the document.
+	 * @return string Archive name of the document.
 	 */
 	public function get_archive_name() {
 		return $this->archive_name;
