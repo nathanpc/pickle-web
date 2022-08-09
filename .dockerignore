@@ -2,6 +2,9 @@
 LICENSE
 README.md
 
+# Volumes
+resources/
+
 # PHP and Composer
 vendor/
 
@@ -15,7 +18,7 @@ vendor/
 # Docker
 .dockerignore
 Dockerfile
+docker-compose.yml
 
 # Garbage
 **/.DS_Store
-

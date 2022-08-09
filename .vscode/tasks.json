@@ -6,10 +6,8 @@
 			"type": "shell",
 			"command": "docker",
 			"args": [
-				"build",
-				"-t",
-				"${workspaceFolderBasename}-dev",
-				"${workspaceFolder}"
+				"compose",
+				"build"
 			],
 			"group": {
 				"kind": "build"
@@ -23,12 +21,8 @@
 			"type": "shell",
 			"command": "docker",
 			"args": [
-				"run",
-				"-it",
-				"--rm",
-				"-p",
-				"8080:80",
-				"${workspaceFolderBasename}-dev"
+				"compose",
+				"up"
 			],
 			"group": {
 				"kind": "test",
