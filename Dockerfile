@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	curl \
 	php \
 	libapache2-mod-php \
+	php-mbstring \
 	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN sed -zie 's|\(<Directory /var/www/>\)\(.*\)\(</Directory>\)|\1\nOptions Indexes FollowSymLinks\nAllowOverride All\nRequire all granted\n\3|g' /etc/apache2/apache2.conf && \
