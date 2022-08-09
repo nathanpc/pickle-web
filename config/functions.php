@@ -60,3 +60,26 @@ function urlparam($name, $default = NULL) {
 	// We've got it.
 	return $_GET[$name];
 }
+
+/**
+ * Automatically generate a link if a string is a URL.
+ * 
+ * @param  string $str String to be checked for an URL.
+ * @return string      Same string if it's not a URL. Otherwise an anchor tag.
+ */
+function auto_link($str) {
+	// Check if we actually have an URL.
+	if (!preg_match('/^[A-Za-z]+:(\/\/)?[A-Za-z0-9]/', $str))
+		return $str;
+
+	// Parse the URL. If it's seriously malformed just return the string.
+	$url = parse_url($str);
+	if ($url === false)
+		return $str;
+
+	// Build up an URL.
+	$str_url = ((isset($url['scheme'])) ? '' : 'https://') . $str;
+	$pretty_url = $url['host'] . ((isset($url['path'])) ? $url['path'] : '');
+
+	return '<a href="' . $str_url . '">' . $pretty_url . '</a>';
+}
