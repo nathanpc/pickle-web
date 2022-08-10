@@ -1,7 +1,7 @@
 <?php
 /**
  * Document.php
- * Pick list document abstration class.
+ * Pick list document abstraction class.
  * 
  * @author Nathan Campos <nathan@innoveworkshop.com>
  */
@@ -35,11 +35,14 @@ class Document {
 	 * Constructs a document object given a pick list document file.
 	 * 
 	 * @param string $file File to be parsed.
+	 * @param string $name Archive name to be used. If one isn't supplied we'll
+	 *                     construct a slug from the archive properties.
 	 */
-	public static function FromFile($file) {
+	public static function FromFile($file, $name = NULL) {
 		// Construct ourselves and set our archive name.
 		$doc = new Document();
-		$doc->set_archive_name(basename($file, '.' . Document::ARCHIVE_EXT));
+		if (!is_null($name))
+			$doc->set_archive_name($name);
 
 		// Check if the file exists.
 		if (!file_exists($file))
@@ -55,76 +58,19 @@ class Document {
 		$category = NULL;
 		$component = NULL;
 		while (($line = fgets($handle)) !== false) {
-			// Clean up before parsing.
-			$line = trim($line);
-
-			if ($stage == "empty") {
-				if (Component::IsDescriptorLine($line)) {
-					// Make sure we have a category defined.
-					if (is_null($category)) {
-						throw new \Exception("Trying to create a component without parent category");
-					}
-					
-					// Change the stage and parse a new component.
-					$component = Component::FromDescriptorLine($line);
-					$stage = "refdes";
-					continue;
-				} else if (Category::IsCategoryLine($line)) {
-					// Check if we need to commit our parsed category first.
-					if ($category != NULL)
-						$doc->add_category($category);
-
-					// Create the new category.
-					$category = Category::FromCategoryLine($line);
-					$stage = "empty";
-					continue;
-				} else if ($line == "") {
-					// Just another empty line...
-					continue;
-				}
-			} else if ($stage == "refdes") {
-				// Looks like we've finished parsing this component.
-				if ($line == "") {
-					// Add component to the category.
-					$category->add_component($component);
-					
-					// Reset everything.
-					$component = NULL;
-					$stage = "empty";
-					continue;
-				}
-
-				// Parse the reference designators and add the component.
-				$component->parse_refdes_line($line);
-				$category->add_component($component);
-				$stage = "empty";
-				continue;
-			} else if ($stage == "properties") {
-				// Looks like we are in the properties header.
-				if ($line == "")
-					continue;
-
-				// Have we finished parsing the properties header?
-				if ($line == "---") {
-					$stage = "empty";
-					continue;
-				}
-
-				// Check if we've got a property.
-				if (!Property::IsPropertyLine($line))
-					throw new Exception("The header section of a document must only contain properties");
-
-				// Append the property to our parsed document object.
-				$doc->add_property(Property::FromPropertyLine($line));
-			}
+			$doc->parse_line($line, $stage, $category, $component);
 		}
+
+		// Close the file handle.
+		fclose($handle);
 
 		// Make sure the last parsed category is accounted for.
 		if ($category != NULL)
 			$doc->add_category($category);
 
-		// Close the file handle.
-		fclose($handle);
+		// Make sure we have an archive name.
+		if (is_null($doc->get_archive_name()))
+			$doc->set_archive_name($doc->create_archive_name_slug());
 
 		// Return ourselves.
 		return $doc;
@@ -147,7 +93,7 @@ class Document {
 
 		try {
 			// Parse the archive.
-			return Document::FromFile(Document::ARCHIVE_DIR . $name . '.' . Document::ARCHIVE_EXT);
+			return Document::FromFile(Document::ARCHIVE_DIR . $name . '.' . Document::ARCHIVE_EXT, $name);
 		} catch (\Exception $e) {
 			return NULL;
 		}
@@ -156,13 +102,34 @@ class Document {
 	/**
 	 * Constructs a document object given a pick list document contents string.
 	 * 
-	 * @param string $name     Archive name.
 	 * @param string $contents Document contents to be parsed.
+	 * @param string $name     Archive name to be used. If one isn't supplied we'll
+	 *                         construct a slug from the archive properties.
 	 */
-	public static function FromString($name, $contents) {
-		// TODO
-		//$this->archive_name = $name;
-		throw new \Exception("Not yet implemented");
+	public static function FromString($contents, $name = NULL) {
+		// Construct ourselves and set our archive name.
+		$doc = new Document();
+		if (!is_null($name))
+			$doc->set_archive_name($name);
+
+		// Parse string line by line.
+		$stage = "properties";
+		$category = NULL;
+		$component = NULL;
+		foreach (explode(PHP_EOL, $contents) as $line) {
+			$doc->parse_line($line, $stage, $category, $component);
+		}
+
+		// Make sure the last parsed category is accounted for.
+		if ($category != NULL)
+			$doc->add_category($category);
+
+		// Make sure we have an archive name.
+		if (is_null($doc->get_archive_name()))
+			$doc->set_archive_name($doc->create_archive_name_slug());
+
+		// Return ourselves.
+		return $doc;
 	}
 
 	/**
@@ -181,10 +148,100 @@ class Document {
 				continue;
 			
 			// Push the document into the array.
-			array_push($arr, Document::FromFile(Document::ARCHIVE_DIR . $file));
+			array_push($arr,
+				Document::FromArchive(basename($file, '.' . Document::ARCHIVE_EXT), false));
 		}
 
 		return $arr;
+	}
+
+	/**
+	 * Parses a line from a pick list document.
+	 * WARNING: To ensure we've always got the last category in the document,
+	 * make sure to always call something like this after your while loop:
+	 * 
+	 * ```php
+	 * if ($category != NULL)
+	 *     $doc->add_category($category);
+	 * ```
+	 *
+	 * @param string    $line      Line to be parsed.
+	 * @param string    $stage     Reference to the current stage state.
+	 * @param Category  $category  Reference to a category object that we might be parsing.
+	 * @param Component $component Reference to a component object that we might be parsing.
+	 */
+	protected function parse_line($line, &$stage, &$category, &$component) {
+		// Clean up before parsing.
+		$line = trim($line);
+
+		if ($stage == "empty") {
+			if (Component::IsDescriptorLine($line)) {
+				// Make sure we have a category defined.
+				if (is_null($category)) {
+					throw new \Exception("Trying to create a component without parent category");
+				}
+
+				// Change the stage and parse a new component.
+				$component = Component::FromDescriptorLine($line);
+				$stage = "refdes";
+				return;
+			} else if (Category::IsCategoryLine($line)) {
+				// Check if we need to commit our parsed category first.
+				if ($category != NULL)
+					$this->add_category($category);
+
+				// Create the new category.
+				$category = Category::FromCategoryLine($line);
+				$stage = "empty";
+				return;
+			} else if ($line == "") {
+				// Just another empty line...
+				return;
+			}
+		} else if ($stage == "refdes") {
+			// Looks like we've finished parsing this component.
+			if ($line == "") {
+				// Add component to the category.
+				$category->add_component($component);
+
+				// Reset everything.
+				$component = NULL;
+				$stage = "empty";
+				return;
+			}
+
+			// Parse the reference designators and add the component.
+			$component->parse_refdes_line($line);
+			$category->add_component($component);
+			$stage = "empty";
+			return;
+		} else if ($stage == "properties") {
+			// Looks like we are in the properties header.
+			if ($line == "")
+				return;
+
+			// Have we finished parsing the properties header?
+			if ($line == "---") {
+				$stage = "empty";
+				return;
+			}
+
+			// Check if we've got a property.
+			if (!Property::IsPropertyLine($line))
+				throw new \Exception("The header section of a document must only contain properties");
+
+			// Append the property to our parsed document object.
+			$this->add_property(Property::FromPropertyLine($line));
+		}
+	}
+
+	/**
+	 * Creates an archive name slug based on the archive properties.
+	 *
+	 * @return string Generated archive name slug.
+	 */
+	public function create_archive_name_slug() {
+		return "test-slug";
 	}
 
 	/**
@@ -199,7 +256,7 @@ class Document {
 	/**
 	 * Sets the archive name of this document.
 	 * 
-	 * @param string $name Achive name of the document.
+	 * @param string $name Archive name of the document.
 	 */
 	public function set_archive_name($name) {
 		$this->archive_name = $name;
