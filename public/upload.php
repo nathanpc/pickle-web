@@ -30,7 +30,7 @@
 	<div class="card-body tab-content">
 		<!-- File Tab -->
 		<div class="tab-pane fade show active" id="file" role="tabpanel" aria-labelledby="file-tab">
-			<form method="POST" action="<?= href('/upload') ?>" enctype="multipart/form-data">
+			<form method="POST" action="<?= href('/pick') ?>" enctype="multipart/form-data">
 				<!-- Archive File Picker -->
 				<div class="custom-file mb-3">
 					<input type="file" class="custom-file-input" id="archive-file" name="archive-file" required>
@@ -47,7 +47,7 @@
 
 		<!-- Text Tab -->
 		<div class="tab-pane fade" id="text" role="tabpanel" aria-labelledby="text-tab">
-			<form method="POST" action="<?= href('/upload') ?>" enctype="multipart/form-data">
+			<form method="POST" action="<?= href('/pick') ?>" enctype="multipart/form-data">
 				<!-- Archive Text Area -->
 				<div class="mb-3">
 					<textarea class="form-control text-monospace" id="archive-text" name="archive-text" rows="20" placeholder="Paste your PickLE archive contents here..." required>Name: Example Archive

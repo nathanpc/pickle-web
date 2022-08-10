@@ -1,6 +1,6 @@
 <?php require_once __DIR__ . "/../config/functions.php"; ?>
 <?php require_once __DIR__ . "/../vendor/autoload.php"; ?>
-<?php $picklist = PickLE\Document::FromArchive(urlparam('archive', NULL)); ?>
+<?php $picklist = get_picklist_from_req(); ?>
 <?php $lot_size = intval(urlparam('lotsize', 1)); ?>
 <?php define('PAGE_TITLE', 'Pick List'); ?>
 <?php require(__DIR__ . "/../templates/head.php"); ?>
@@ -80,6 +80,8 @@
 			</tbody>
 		</table>
 	</div>
+
+	<br>
 <?php } ?>
 
 <?php require(__DIR__ . "/../templates/footer.php"); ?>

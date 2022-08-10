@@ -109,3 +109,30 @@ function nav_item($label, $href, $pagename) {
 	// Build up some HTML.
 	return '<li class="nav-item' . (($current) ? ' active' : '') . '"><a class="nav-link" href="' . $href . '">' . $label . (($current) ? ' <span class="sr-only">(current)</span>' : '') . '</a></li>';
 }
+
+/**
+ * Gets a {@see PickLE\Document} from the data gathered from the request.
+ *
+ * @return PickLE\Document Pick list archive or NULL.
+ */
+function get_picklist_from_req() {
+	// Are we just picking an stored archive?
+	if ($_SERVER['REQUEST_METHOD'] == 'GET')
+		return PickLE\Document::FromArchive(urlparam('archive', NULL));
+	
+	// Make sure there's no funny stuff going on..
+	if ($_SERVER['REQUEST_METHOD'] != 'POST')
+		return NULL;
+	
+	// Determine the correct way to parse this archive.
+	if (isset($_POST['archive-text'])) {
+		// User submitted the archive in text form.
+		return PickLE\Document::FromString($_POST['archive-text']);
+	} else if (isset($_FILES['archive-file'])) {
+		// User submitted the archive in file form.
+		return PickLE\Document::FromFile($_FILES['archive-file']['tmp_name']);
+	}
+
+	// Ok...
+	return NULL;
+}
