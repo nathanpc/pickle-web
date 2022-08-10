@@ -1,7 +1,8 @@
+<?php define('PAGE_TITLE', 'Upload'); ?>
 <?php require(__DIR__ . "/../templates/head.php"); ?>
 
 <h3>
-	Upload
+	<?= PAGE_TITLE ?>
 	<small class="text-muted">Try out on your own pick lists</small>
 </h3>
 

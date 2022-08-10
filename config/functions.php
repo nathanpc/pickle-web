@@ -11,12 +11,18 @@ require_once __DIR__ . "/config.php";
 /**
  * Creates a simple, but effective, title string.
  *
- * @param  string $desc An optional descriptor of the current page.
+ * @param  string $desc An optional descriptor of the current page. This will be
+ *                      automatically substituted by a PAGE_TITLE constant if
+ *                      it is defined.
  * @return string       Formatted title.
  */
 function site_title($desc = NULL) {
 	// Default to just the application name.
 	$title = APP_NAME;
+
+	// Check if we should use the PAGE_TITLE constant.
+	if (defined('PAGE_TITLE') && is_null($desc))
+		$desc = constant('PAGE_TITLE');
 	
 	// Prepend a description if the user wants.
 	if (!is_null($desc))
@@ -82,4 +88,24 @@ function auto_link($str) {
 	$pretty_url = $url['host'] . ((isset($url['path'])) ? $url['path'] : '');
 
 	return '<a href="' . $str_url . '">' . $pretty_url . '</a>';
+}
+
+/**
+ * Generates a Bootstrap Navbar item.
+ * 
+ * @param  string $label    Label of the item.
+ * @param  string $href     Relative URL this item points to or a full URL.
+ * @param  string $pagename Destination page script name without the extension.
+ * @return string           Fully-populated Bootstrap navbar item.
+ */
+function nav_item($label, $href, $pagename) {
+	// Are we the current page?
+	$current = is_parent_page($pagename);
+
+	// Make sure we deal with relative URLs.
+	if ($href[0] == '/')
+		$href = href($href);
+
+	// Build up some HTML.
+	return '<li class="nav-item' . (($current) ? ' active' : '') . '"><a class="nav-link" href="' . $href . '">' . $label . (($current) ? ' <span class="sr-only">(current)</span>' : '') . '</a></li>';
 }

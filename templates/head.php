@@ -3,31 +3,10 @@
 <?php require_once __DIR__ . "/../config/config.php"; ?>
 <?php require_once __DIR__ . "/../config/functions.php"; ?>
 <?php require_once __DIR__ . "/../vendor/autoload.php"; ?>
-<?php
-/**
- * Generates a Bootstrap Navbar item.
- * 
- * @param  string $label    Label of the item.
- * @param  string $href     Relative URL this item points to or a full URL.
- * @param  string $pagename Destination page script name without the extension.
- * @return string           Fully-populated Bootstrap navbar item.
- */
-function nav_item($label, $href, $pagename) {
-	// Are we the current page?
-	$current = is_parent_page($pagename);
-
-	// Make sure we deal with relative URLs.
-	if ($href[0] == '/')
-		$href = href($href);
-
-	// Build up some HTML.
-	return '<li class="nav-item' . (($current) ? ' active' : '') . '"><a class="nav-link" href="' . $href . '">' . $label . (($current) ? ' <span class="sr-only">(current)</span>' : '') . '</a></li>';
-}
-?>
 
 <head>
 	<meta charset="utf-8" />
-	<title><?= site_title((defined('PAGE_TITLE')) ? PAGE_TITLE : NULL) ?></title>
+	<title><?= site_title() ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<!-- jQuery -->

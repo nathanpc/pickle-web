@@ -2,6 +2,7 @@
 <?php require_once __DIR__ . "/../vendor/autoload.php"; ?>
 <?php $picklist = PickLE\Document::FromArchive(urlparam('archive', NULL)); ?>
 <?php $lot_size = intval(urlparam('lotsize', 1)); ?>
+<?php define('PAGE_TITLE', 'Pick List'); ?>
 <?php require(__DIR__ . "/../templates/head.php"); ?>
 
 <?php if (is_null($picklist)) { ?>

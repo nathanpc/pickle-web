@@ -1,7 +1,8 @@
+<?php define('PAGE_TITLE', 'About'); ?>
 <?php require(__DIR__ . "/../templates/head.php"); ?>
 
 <h3>
-	About
+	<?= PAGE_TITLE ?>
 	<small class="text-muted">The best way to create and use pick lists</small>
 </h3>
 

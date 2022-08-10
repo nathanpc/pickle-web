@@ -1,8 +1,9 @@
+<?php define('PAGE_TITLE', 'Archive'); ?>
 <?php require(__DIR__ . "/../templates/head.php"); ?>
 <?php $archives = PickLE\Document::ListArchives(); ?>
 
 <h3>
-	Archive
+	<?= PAGE_TITLE ?>
 	<small class="text-muted">A collection of saved pick lists</small>
 </h3>
 
