@@ -24,6 +24,7 @@ function nav_item($label, $href, $pagename) {
 	return '<li class="nav-item' . (($current) ? ' active' : '') . '"><a class="nav-link" href="' . $href . '">' . $label . (($current) ? ' <span class="sr-only">(current)</span>' : '') . '</a></li>';
 }
 ?>
+
 <head>
 	<meta charset="utf-8" />
 	<title><?= site_title((defined('PAGE_TITLE')) ? PAGE_TITLE : NULL) ?></title>
@@ -43,6 +44,7 @@ function nav_item($label, $href, $pagename) {
 	<link rel="stylesheet" href="<?= href('/css/custom.css') ?>">
 	<script src="<?= href('/js/functions.js') ?>"></script>
 </head>
+
 <body>
 	<!-- Navigation Bar -->
 	<nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
@@ -55,17 +57,15 @@ function nav_item($label, $href, $pagename) {
 		<div class="collapse navbar-collapse" id="navbarNav">
 			<ul class="navbar-nav mr-auto">
 				<?= nav_item('Home', '/', 'index') ?>
+				<?= nav_item('Submit', '/upload', 'upload') ?>
 				<?= nav_item('Archive', '/archive', 'archive') ?>
 				<?= nav_item('About', '/about', 'about') ?>
 			</ul>
 
 			<?php if (is_parent_page('pick') && isset($picklist)) { ?>
 				<form class="form-inline my-2 my-lg-0" method="GET" action="/pick">
-					<input type="hidden" name="archive"
-						value="<?= $picklist->get_archive_name() ?>">
-					<input class="form-control mr-2" id="lotsize" type="number"
-						name="lotsize" placeholder="Lot Size" aria-label="Lot Size" min="1"
-						<?= ($lot_size > 1) ? 'value="' . $lot_size . '"' : '' ?>>
+					<input type="hidden" name="archive" value="<?= $picklist->get_archive_name() ?>">
+					<input class="form-control mr-2" id="lotsize" type="number" name="lotsize" placeholder="Lot Size" aria-label="Lot Size" min="1" <?= ($lot_size > 1) ? 'value="' . $lot_size . '"' : '' ?>>
 					<button class="btn btn-outline-light" type="submit">Apply</button>
 				</form>
 			<?php } ?>
