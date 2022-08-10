@@ -5,6 +5,7 @@ DirectoryIndex index.php
 RewriteEngine On
 RewriteRule ^archive/?$ archive.php [L]
 RewriteRule ^about/?$ about.php [L]
+RewriteRule ^upload/?$ upload.php [L]
 RewriteRule ^pick/?$ pick.php [L]
 RewriteRule ^pick/([^\/]+)/?$ pick.php?archive=$1 [L]
 RewriteRule ^pick/([^\/]+)/([0-9]+)/?$ pick.php?archive=$1&lotsize=$2 [L]
