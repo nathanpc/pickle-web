@@ -3,13 +3,28 @@
 A library and web utility to deal with [PickLE🥒](https://github.com/nathanpc/pickle)
 documents using PHP.
 
-
 ## Setup Website
 
-First make sure that `.htaccess` can be overriden by this project in order to
+### Using Docker
+
+The preferred way to run this web service is using [Docker](https://www.docker.com/),
+since it's a lot easier to setup, maintain, and is the way we also run it, so
+it's guaranteed to be tested.
+
+To make things even easier for you we even provide a `docker-compose`
+configuration, in which all you have to do is configure which port you want
+the container to listen from. After that it's as simple as running:
+
+```bash
+docker-compose up -d
+```
+
+All done!
+
+### Manual Method
+
+First make sure that `.htaccess` can be overridden by this project in order to
 properly rewrite the website URLs.
-
-
 
 Setting up this project on your web server is quite simple. Start by placing it
 in an appropriate directory inside your server's `htdocs` folder and run the
@@ -23,7 +38,7 @@ composer install
 Now that you have everything needed to run this project you need to make a
 choice if you want to setup a [Virtual Host](https://httpd.apache.org/docs/2.4/vhosts/examples.html)
 to point to your PickLE instance or just run it from a sub-directory in the root
-of your webserver.
+of your web server.
 
 If you choose to run this instance from a sub-directory, make sure that your
 server is configured to allow the project to use its `.htaccess` file in order
@@ -58,16 +73,14 @@ Finally make sure to edit the `config/config.php` file with the appropriate
 parameters regarding your website folder structure and any other options you
 might want to customize.
 
-
 ## Requirements
 
 This is a simple project and only depends on the basic stuff for modern PHP
 development:
 
-  - [Apache](https://httpd.apache.org/) ^2.4
-  - [PHP](https://www.php.net/downloads.php#v7.4.13) ^7.4
-  - [Composer](https://getcomposer.org/download/) ^2.0
-
+- [Apache](https://httpd.apache.org/) ^2.4
+- [PHP](https://www.php.net/downloads.php#v7.4.13) ^7.4
+- [Composer](https://getcomposer.org/download/) ^2.0
 
 ## License
 
