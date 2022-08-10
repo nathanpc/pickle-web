@@ -7,4 +7,4 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./resources:/var/www/resources
+      - ./resources:/var/www/app/resources

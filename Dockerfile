@@ -1,3 +1,4 @@
+# Fetch our dependencies with Composer.
 FROM composer:2 AS composer
 
 WORKDIR /src/app
@@ -7,23 +8,32 @@ RUN composer install --no-dev
 RUN chmod -R 755 vendor/twbs/bootstrap/dist/ && \
 	chmod -R 755 vendor/components/jquery/
 
-FROM debian:stable-slim
+# Reconfigure Apache to work with our application.
+FROM alpine:3 AS apache-config
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-	apache2 \
+RUN apk update && apk add \
+	php81-apache2 \
 	curl \
-	php \
-	libapache2-mod-php \
 	php-mbstring \
-	&& apt-get clean && rm -rf /var/lib/apt/lists/*
+	sed \
+	&& rm -rf /var/cache/apk/*
 
-RUN sed -zie 's|\(<Directory /var/www/>\)\(.*\)\(</Directory>\)|\1\nOptions Indexes FollowSymLinks\nAllowOverride All\nRequire all granted\n\3|g' /etc/apache2/apache2.conf && \
-	sed -ie 's|\(DocumentRoot\)\(.*\)|\1 /var/www/public|g' /etc/apache2/sites-available/000-default.conf && \
-	a2enmod rewrite && \
-	service apache2 restart && \
-	rm -r /var/www/*
+RUN sed -zie 's|\(<Directory "/var/www/localhost/htdocs">\)\(.*\)\(</Directory>\)|\1\nOptions Indexes FollowSymLinks\nAllowOverride All\nRequire all granted\n\3|g' /etc/apache2/httpd.conf && \
+	sed -ie 's|/var/www/localhost/htdocs|/var/www/app/public|g' /etc/apache2/httpd.conf && \
+	sed -ie 's|#\(LoadModule rewrite_module modules/mod_rewrite.so\)|\1|g' /etc/apache2/httpd.conf
 
-WORKDIR /var/www
+# Setup our application.
+FROM alpine:3
+
+RUN apk update && apk add \
+	php81-apache2 \
+	curl \
+	php-mbstring \
+	&& rm -rf /var/cache/apk/*
+
+COPY --from=apache-config /etc/apache2/httpd.conf /etc/apache2/httpd.conf
+
+WORKDIR /var/www/app
 COPY --from=composer /src/app/vendor ./vendor
 COPY --from=composer /src/app/vendor/twbs/bootstrap/dist/ ./public/lib/bootstrap/
 COPY --from=composer /src/app/vendor/components/jquery/ ./public/lib/jquery/
@@ -31,4 +41,4 @@ COPY . ./
 
 EXPOSE 80
 
-ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
+ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]
