@@ -11,7 +11,7 @@ RUN chmod -R 755 vendor/twbs/bootstrap/dist/ && \
 # Reconfigure Apache to work with our application.
 FROM alpine:3 AS apache-config
 
-RUN apk update && apk upgrade && apk add \
+RUN apk update && apk add \
 	php81-apache2 \
 	curl \
 	php-mbstring \
@@ -25,7 +25,7 @@ RUN sed -zie 's|\(<Directory "/var/www/localhost/htdocs">\)\(.*\)\(</Directory>\
 # Setup our application.
 FROM alpine:3
 
-RUN apk update && apk add \
+RUN apk update && apk upgrade && apk add \
 	php81-apache2 \
 	curl \
 	php-mbstring \
