@@ -33,7 +33,7 @@ class Property {
 	 */
 	public static function FromPropertyLine($line) {
 		$matches = null;
-		if (!preg_match('/(?<name>[A-Za-z0-9\-]+): (?<value>.+)/', $line, $matches))
+		if (!preg_match('/(?<name>[A-Za-z0-9 \-]+): (?<value>.+)/', $line, $matches))
 			return null;
 
 		return new Property($matches['name'], $matches['value']);
@@ -65,15 +65,6 @@ class Property {
 	 */
 	public function get_name() {
 		return $this->name;
-	}
-
-	/**
-	 * Gets the property name in a pretty manner.
-	 * 
-	 * @return string Pretty property name.
-	 */
-	public function get_pretty_name() {
-		return str_replace('-', ' ', $this->name);
 	}
 
 	/**

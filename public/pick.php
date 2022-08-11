@@ -31,7 +31,7 @@
 <dl id="doc-properties" class="row mb-0 d-none">
 	<?php foreach ($picklist->get_properties() as $property) { ?>
 		<?php if (($property->get_name() != 'Name') && ($property->get_name() != 'Description') && ($property->get_name() != 'Revision')) { ?>
-			<dt class="col-sm-2"><?= $property->get_pretty_name() ?></dt>
+			<dt class="col-sm-2"><?= $property->get_name() ?></dt>
 			<dd class="col-sm-10"><?= auto_link($property->get_value()) ?></dd>
 		<?php } ?>
 	<?php } ?>
