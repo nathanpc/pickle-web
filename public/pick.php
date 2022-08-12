@@ -1,9 +1,29 @@
 <?php require_once __DIR__ . "/../config/functions.php"; ?>
 <?php require_once __DIR__ . "/../vendor/autoload.php"; ?>
-<?php $picklist = get_picklist_from_req(); ?>
+<?php $picklist = NULL; ?>
 <?php $lot_size = intval(urlparam('lotsize', 1)); ?>
 <?php define('PAGE_TITLE', 'Pick List'); ?>
 <?php require(__DIR__ . "/../templates/head.php"); ?>
+
+<?php try {
+	$picklist = get_picklist_from_req();
+} catch (Exception $e) { ?>
+	<!-- Parsing Error -->
+	<?php http_response_code(500); ?>
+	<div class="jumbotron">
+		<h1 class="display-4">Parsing Error</h1>
+		<p class="lead">
+			<?= htmlspecialchars($e->getMessage()) ?>
+		</p>
+
+		<br>
+
+		<pre><code><?= htmlspecialchars($e->getTraceAsString()) ?></code></pre>
+	</div>
+
+	<?php require(__DIR__ . "/../templates/footer.php"); ?>
+	<?php return; ?>
+<?php } ?>
 
 <?php if (is_null($picklist)) { ?>
 	<!-- Archive Not Found -->
@@ -22,18 +42,16 @@
 
 <!-- Document Information -->
 <h3>
-	<?= $picklist->get_property('Name') ?>
-	<small class="text-muted">Rev <?= $picklist->get_property('Revision') ?></small>
+	<?= $picklist->get_name() ?>
+	<small class="text-muted">Rev <?= $picklist->get_revision() ?></small>
 </h3>
-<p class="lead"><?= $picklist->get_property('Description') ?></p>
+<p class="lead"><?= $picklist->get_description() ?></p>
 
 <!-- Optional Properties -->
 <dl id="doc-properties" class="row mb-0 d-none">
 	<?php foreach ($picklist->get_properties() as $property) { ?>
-		<?php if (($property->get_name() != 'Name') && ($property->get_name() != 'Description') && ($property->get_name() != 'Revision')) { ?>
-			<dt class="col-sm-2"><?= $property->get_name() ?></dt>
-			<dd class="col-sm-10"><?= auto_link($property->get_value()) ?></dd>
-		<?php } ?>
+		<dt class="col-sm-2"><?= $property->get_name() ?></dt>
+		<dd class="col-sm-10"><?= auto_link($property->get_value()) ?></dd>
 	<?php } ?>
 </dl>
 <div class="container text-center">

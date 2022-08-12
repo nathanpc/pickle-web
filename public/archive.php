@@ -12,11 +12,11 @@
 <?php foreach ($archives as $doc) { ?>
 	<div class="card">
 		<div class="card-body">
-			<h5 class="card-title"><?= $doc->get_property('Name') ?></h5>
-			<p class="card-text"><?= $doc->get_property('Description') ?></p>
+			<h5 class="card-title"><?= $doc->get_name() ?></h5>
+			<p class="card-text"><?= $doc->get_description() ?></p>
 
 			<a href="<?= href('/pick/' . $doc->get_archive_name()) ?>" class="card-link">
-				Rev <?= $doc->get_property('Revision') ?>
+				Rev <?= $doc->get_revision() ?>
 			</a>
 		</div>
 	</div>

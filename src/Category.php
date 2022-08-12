@@ -1,7 +1,7 @@
 <?php
 /**
  * Category.php
- * Pick list category abstration class.
+ * Pick list category abstraction class.
  * 
  * @author Nathan Campos <nathan@innoveworkshop.com>
  */
@@ -22,33 +22,6 @@ class Category {
 	public function __construct($name = null, $components = array()) {
 		$this->name = $name;
 		$this->components = $components;
-	}
-
-	/**
-	 * Constructs a category object from a category line in an pick list
-	 * document file.
-	 * 
-	 * @param  string   $line Category line to be parsed.
-	 * @return Categroy       Pre-populated category object.
-	 */
-	public static function FromCategoryLine($line) {
-		// This one is trivial. Just need to remove the colon at the end.
-		return new Category(substr($line, 0, -1));
-	}
-
-	/**
-	 * Checks if a given line in an pick list document is a category line.
-	 * 
-	 * @param  string  $line Document line to be tested.
-	 * @return boolean       Is this a valid category line?
-	 */
-	public static function IsCategoryLine($line) {
-		// Empty lines are just separators.
-		if (strlen($line) == 0)
-			return false;
-
-		// If the line ends with an colon means we have a category.
-		return $line[-1] == ':';
 	}
 
 	/**

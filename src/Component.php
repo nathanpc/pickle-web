@@ -1,7 +1,7 @@
 <?php
 /**
  * Component.php
- * Pick list item abstration class.
+ * Pick list item abstraction class.
  * 
  * @author Nathan Campos <nathan@innoveworkshop.com>
  */
@@ -20,7 +20,7 @@ class Component {
 	/**
 	 * Constructs a component object.
 	 * 
-	 * @param boolean $picked      Has this cmponent been picked already?
+	 * @param boolean $picked      Has this component been picked already?
 	 * @param string  $name        Manufacturer's part number.
 	 * @param string  $value       Value of the component if applicable.
 	 * @param string  $description Brief description of the component.
@@ -35,60 +35,6 @@ class Component {
 		$this->description = $description;
 		$this->package = $package;
 		$this->refdes = $refdes;
-	}
-
-	/**
-	 * Constructs a component object from a descriptor line in an pick list
-	 * document file.
-	 * 
-	 * @param  string    $line Descriptor line to be parsed.
-	 * @return Component       Pre-populated component object.
-	 */
-	public static function FromDescriptorLine($line) {
-		$component = new Component();
-
-		// Use our super complicated regular expression to parse the line.
-		preg_match('/\[(?<picked>.)\]\s+(?<quantity>\d+)\s+(?<name>[^\s]+)\s*(\((?<value>[^\)]+)\)\s*)?("(?<description>[^\"]+)"\s*)?(\[(?<case>[^\]]+)\]\s*)?/', $line, $m);
-		
-		// Populate the mandatory attributes of the object.
-		$component->picked = ($m["picked"] != ' ');
-		$component->name = $m["name"];
-
-		// Go through populating the rest of the object.
-		if (array_key_exists("value", $m))
-			$component->value = $m["value"];
-		if (array_key_exists("description", $m))
-			$component->description = $m["description"];
-		if (array_key_exists("case", $m))
-			$component->package = $m["case"];
-
-		return $component;
-	}
-
-	/**
-	 * Parses the reference designator line of an pick list document file and
-	 * populates the internal array.
-	 * 
-	 * @param string $line Reference designator line to be parsed.
-	 */
-	public function parse_refdes_line($line) {
-		$this->refdes = array_filter(explode(" ", $line));
-	}
-
-	/**
-	 * Checks if a given line in an pick list document is a component
-	 * descriptor line.
-	 * 
-	 * @param  string  $line Document line to be tested.
-	 * @return boolean       Is this a valid descriptor line?
-	 */
-	public static function IsDescriptorLine($line) {
-		// Empty lines are just separators.
-		if (strlen($line) == 0)
-			return false;
-
-		// If the line starts with an open bracket means we have a descriptor.
-		return $line[0] == '[';
 	}
 
 	/**
@@ -113,7 +59,7 @@ class Component {
 	/**
 	 * Sets the picked property of the component.
 	 * 
-	 * @param boolean $picked Has this cmponent been picked already?
+	 * @param boolean $picked Has this component been picked already?
 	 */
 	public function set_picked($picked) {
 		$this->picked = $picked;

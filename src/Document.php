@@ -11,6 +11,9 @@ require __DIR__ . "/../vendor/autoload.php";
 
 class Document {
 	private $archive_name;
+	private $title;
+	private $revision;
+	private $description;
 	private $properties;
 	private $categories;
 
@@ -21,12 +24,19 @@ class Document {
 	/**
 	 * Constructs an empty document object.
 	 * 
-	 * @param array $properties Some descriptive information about this
-	 *                          specific document.
-	 * @param array $categories Categories of components to be picked.
+	 * @param string $title       Document title property.
+	 * @param string $revision    Document revision property.
+	 * @param string $description Document description property.
+	 * @param array  $properties  Some descriptive information about this
+	 *                            specific document.
+	 * @param array  $categories  Categories of components to be picked.
 	 */
-	public function __construct($properties = array(), $categories = array()) {
-		$this->archive_name = NULL;
+	public function __construct($title = NULL, $revision = NULL,
+			$description = NULL, $properties = array(), $categories = array()) {
+		$this->title = $title;
+		$this->revision = $revision;
+		$this->description = $description;
+		$this->archive_name = $this->create_archive_name_slug();
 		$this->properties = $properties;
 		$this->categories = $categories;
 	}
@@ -53,20 +63,12 @@ class Document {
 		if (!$handle)
 			throw new \Exception("Error while trying to open file '$file'");
 
-		// Go through the file line-by-line.
-		$stage = "properties";
-		$category = NULL;
-		$component = NULL;
-		while (($line = fgets($handle)) !== false) {
-			$doc->parse_line($line, $stage, $category, $component);
-		}
+		// Parse the string.
+		$contents = fread($handle, filesize($file));
+		$doc->parse($contents);
 
 		// Close the file handle.
 		fclose($handle);
-
-		// Make sure the last parsed category is accounted for.
-		if ($category != NULL)
-			$doc->add_category($category);
 
 		// Make sure we have an archive name.
 		if (is_null($doc->get_archive_name()))
@@ -112,17 +114,8 @@ class Document {
 		if (!is_null($name))
 			$doc->set_archive_name($name);
 
-		// Parse string line by line.
-		$stage = "properties";
-		$category = NULL;
-		$component = NULL;
-		foreach (explode(PHP_EOL, $contents) as $line) {
-			$doc->parse_line($line, $stage, $category, $component);
-		}
-
-		// Make sure the last parsed category is accounted for.
-		if ($category != NULL)
-			$doc->add_category($category);
+		// Parse the string.
+		$doc->parse($contents);
 
 		// Make sure we have an archive name.
 		if (is_null($doc->get_archive_name()))
@@ -156,83 +149,112 @@ class Document {
 	}
 
 	/**
-	 * Parses a line from a pick list document.
-	 * WARNING: To ensure we've always got the last category in the document,
-	 * make sure to always call something like this after your while loop:
-	 * 
-	 * ```php
-	 * if ($category != NULL)
-	 *     $doc->add_category($category);
-	 * ```
+	 * Parses the contents of a document using the parsing microservice.
 	 *
-	 * @param string    $line      Line to be parsed.
-	 * @param string    $stage     Reference to the current stage state.
-	 * @param Category  $category  Reference to a category object that we might be parsing.
-	 * @param Component $component Reference to a component object that we might be parsing.
+	 * @param string $contents Contents of a PickLE document.
 	 */
-	protected function parse_line($line, &$stage, &$category, &$component) {
-		// Clean up before parsing.
-		$line = trim($line);
+	protected function parse($contents) {
+		// Setup the request.
+		$opts = array(
+			'http' => array(
+				'method'  => 'POST',
+				'header'  => 'Content-Type: text/plain',
+				'content' => $contents
+			)
+		);
+		$context = stream_context_create($opts);
 
-		if ($stage == "empty") {
-			if (Component::IsDescriptorLine($line)) {
-				// Make sure we have a category defined.
-				if (is_null($category)) {
-					throw new \Exception("Trying to create a component without parent category");
-				}
+		// Fetch the parsed results from the microservice.
+		$response = file_get_contents(PICKLE_API_URL . '/export/json', false, $context);
+		if ($response === false)
+			throw new \Exception('An error occurred while parsing using the microservice');
 
-				// Change the stage and parse a new component.
-				$component = Component::FromDescriptorLine($line);
-				$stage = "refdes";
-				return;
-			} else if (Category::IsCategoryLine($line)) {
-				// Check if we need to commit our parsed category first.
-				if ($category != NULL)
-					$this->add_category($category);
+		// Decode the JSON object.
+		$json = json_decode($response, true);
 
-				// Create the new category.
-				$category = Category::FromCategoryLine($line);
-				$stage = "empty";
-				return;
-			} else if ($line == "") {
-				// Just another empty line...
-				return;
-			}
-		} else if ($stage == "refdes") {
-			// Looks like we've finished parsing this component.
-			if ($line == "") {
-				// Add component to the category.
-				$category->add_component($component);
+		// Populate ourselves.
+		$this->title = $json['name'];
+		$this->revision = $json['revision'];
+		$this->description = $json['description'];
 
-				// Reset everything.
-				$component = NULL;
-				$stage = "empty";
-				return;
-			}
-
-			// Parse the reference designators and add the component.
-			$component->parse_refdes_line($line);
-			$category->add_component($component);
-			$stage = "empty";
-			return;
-		} else if ($stage == "properties") {
-			// Looks like we are in the properties header.
-			if ($line == "")
-				return;
-
-			// Have we finished parsing the properties header?
-			if ($line == "---") {
-				$stage = "empty";
-				return;
-			}
-
-			// Check if we've got a property.
-			if (!Property::IsPropertyLine($line))
-				throw new \Exception("The header section of a document must only contain properties");
-
-			// Append the property to our parsed document object.
-			$this->add_property(Property::FromPropertyLine($line));
+		// Populate properties.
+		$this->properties = array();
+		foreach ($json['properties'] as $property) {
+			$this->add_property(new Property($property['name'], $property['value']));
 		}
+
+		// Populates the categories.
+		$this->categories = array();
+		foreach ($json['categories'] as $cat) {
+			$category = new Category($cat['name']);
+
+			foreach ($cat['components'] as $comp) {
+				$category->add_component(new Component(
+					$comp['picked'],
+					$comp['name'],
+					$comp['value'],
+					$comp['description'],
+					$comp['package'],
+					$comp['refdes']
+				));
+			}
+
+			$this->add_category($category);
+		}
+	}
+
+	/**
+	 * Gets the name of the document.
+	 *
+	 * @return string Name of the document.
+	 */
+	public function get_name() {
+		return $this->title;
+	}
+
+	/**
+	 * Sets the name of the document.
+	 *
+	 * @param string $name Name of the document.
+	 */
+	public function set_name($name) {
+		$this->title = $name;
+	}
+
+	/**
+	 * Gets the revision of the document.
+	 *
+	 * @return string Revision of the document.
+	 */
+	public function get_revision() {
+		return $this->revision;
+	}
+
+	/**
+	 * Sets the revision of the document.
+	 *
+	 * @param string $revision Revision of the document.
+	 */
+	public function set_revision($revision) {
+		$this->revision = $revision;
+	}
+
+	/**
+	 * Gets the description of the document.
+	 *
+	 * @return string Description of the document.
+	 */
+	public function get_description() {
+		return $this->description;
+	}
+
+	/**
+	 * Sets the description of the document.
+	 *
+	 * @param string $description Description of the document.
+	 */
+	public function set_description($description) {
+		$this->description = $description;
 	}
 
 	/**
@@ -240,8 +262,15 @@ class Document {
 	 *
 	 * @return string Generated archive name slug.
 	 */
-	public function create_archive_name_slug() {
-		return "test-slug";
+	protected function create_archive_name_slug() {
+		// Only allow letters and numbers.
+		$slug = preg_replace('/[^A-Za-z0-9\-]/', '-', $this->get_name());
+
+		// Remove duplicate slashes.
+		$slug = preg_replace('/\-{2,}/', '-', $slug);
+
+		// Make it lowercase.
+		return strtolower($slug);
 	}
 
 	/**
