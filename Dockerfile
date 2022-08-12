@@ -25,7 +25,7 @@ RUN sed -zie 's|\(<Directory "/var/www/localhost/htdocs">\)\(.*\)\(</Directory>\
 # Setup our application.
 FROM alpine:3
 
-RUN apk update && apk upgrade && apk add \
+RUN apk update && apk add \
 	php81-apache2 \
 	curl \
 	php-mbstring \
