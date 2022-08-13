@@ -154,8 +154,23 @@ PickListStorage.prototype.setComponentRefDesPicked = function (id, refdes, state
  * Applies the loaded settings to the current page.
  */
 PickListStorage.prototype.apply = function () {
-	// TODO
-	console.log("Apply settings for " + this.storageKey);
+	// Go through the components checking their checkboxes.
+	for (var i = 0; i < this.pickState.components.length; i++) {
+		var component = this.pickState.components[i];
+
+		// Check the picked checkbox if applicable.
+		var elem = $("#" + this.getComponentCheckboxId(component.id));
+		elem.prop("checked", component.picked);
+
+		// Go through the reference designators crossing them.
+		for (var j = 0; j < component.placedRefDes.length; j++) {
+			var refdes = component.placedRefDes[j];
+
+			// Cross out the reference designator.
+			elem = $("#" + this.getRefDesElementId(component.id, refdes));
+			elem.addClass("refdes-crossed");
+		}
+	}
 };
 
 /**
@@ -166,7 +181,7 @@ PickListStorage.prototype.apply = function () {
  * @param {Event} event Element event handler.
  */
 PickListStorage.prototype.handleToggleComponentPicked = function (componentId, event) {
-	var checkboxId = componentId + "-picked";
+	var checkboxId = this.getComponentCheckboxId(componentId);
 
 	toggleCheckboxCheck(event, checkboxId);
 	this.setComponentPicked(componentId, $("#" + checkboxId).prop("checked"));
@@ -181,9 +196,30 @@ PickListStorage.prototype.handleToggleComponentPicked = function (componentId, e
  * @param {Event} [event] Element event handler.
  */
 PickListStorage.prototype.handleToggleRefDesPicked = function (componentId, refdes, event) {
-	var elemId = componentId + "-refdes-" + refdes.toLowerCase();
+	var elemId = this.getRefDesElementId(componentId, refdes);
 
 	toggleStrikethrough(document.getElementById(elemId), event);
 	this.setComponentRefDesPicked(componentId, refdes,
 		$("#" + elemId).hasClass("refdes-crossed"));
+};
+
+/**
+ * Gets the canonical ID of the component picked checkbox element.
+ * 
+ * @param {string} componentId ID of the component.
+ * @returns {string} Canonical ID of the checkbox element.
+ */
+PickListStorage.prototype.getComponentCheckboxId = function (componentId) {
+	return componentId + "-picked";
+};
+
+/**
+ * Gets the canonical ID of the component reference designator element.
+ * 
+ * @param {string} componentId ID of the component.
+ * @param {string} refdes Reference designator.
+ * @returns {string} Canonical ID of the reference designator element.
+ */
+PickListStorage.prototype.getRefDesElementId = function (componentId, refdes) {
+	return componentId + "-refdes-" + refdes.toLowerCase();
 };
