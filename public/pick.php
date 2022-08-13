@@ -102,4 +102,6 @@
 	<br>
 <?php } ?>
 
+<script src="<?= href('/js/storage/picklist.js') ?>"></script>
+
 <?php require(__DIR__ . "/../templates/footer.php"); ?>

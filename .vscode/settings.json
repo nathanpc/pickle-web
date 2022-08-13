@@ -3,9 +3,12 @@
 		"apacheconf",
 		"htdocs",
 		"Laravel",
+		"lessmsg",
 		"lotsize",
+		"moremsg",
 		"pagename",
 		"picklist",
+		"pickstate",
 		"refdes",
 		"urlparam"
 	]
