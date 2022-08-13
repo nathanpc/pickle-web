@@ -10,6 +10,7 @@ namespace PickLE;
 require __DIR__ . "/../vendor/autoload.php";
 
 class Document {
+	private $id;
 	private $archive_name;
 	private $title;
 	private $revision;
@@ -33,10 +34,11 @@ class Document {
 	 */
 	public function __construct($title = NULL, $revision = NULL,
 			$description = NULL, $properties = array(), $categories = array()) {
+		$this->id = NULL;
 		$this->title = $title;
 		$this->revision = $revision;
 		$this->description = $description;
-		$this->archive_name = $this->create_archive_name_slug();
+		$this->archive_name = NULL;
 		$this->properties = $properties;
 		$this->categories = $categories;
 	}
@@ -69,10 +71,6 @@ class Document {
 
 		// Close the file handle.
 		fclose($handle);
-
-		// Make sure we have an archive name.
-		if (is_null($doc->get_archive_name()))
-			$doc->set_archive_name($doc->create_archive_name_slug());
 
 		// Return ourselves.
 		return $doc;
@@ -116,10 +114,6 @@ class Document {
 
 		// Parse the string.
 		$doc->parse($contents);
-
-		// Make sure we have an archive name.
-		if (is_null($doc->get_archive_name()))
-			$doc->set_archive_name($doc->create_archive_name_slug());
 
 		// Return ourselves.
 		return $doc;
@@ -204,6 +198,38 @@ class Document {
 	}
 
 	/**
+	 * Gets the unique ID of this document. Used primarily for front-end IDs.
+	 * 
+	 * @return string Unique ID of this document.
+	 */
+	public function get_id() {
+		// Have we already generated our ID?
+		if (is_null($this->id))
+			$this->generate_id();
+
+		return $this->id;
+	}
+
+	/**
+	 * Generates the unique ID for this component.
+	 */
+	protected function generate_id() {
+		// Checksum by summing up all of the character values in its component IDs.
+		$checksum = 0;
+		foreach ($this->categories as $category) {
+			$cat_id = $category->get_id();
+			$len = strlen($cat_id);
+
+			for ($i = 0; $i < $len; $i++) {
+				$checksum += ord($cat_id[$i]);
+			}
+		}
+
+		// Append the checksum in hexadecimal.
+		$this->id = $this->get_archive_name() . '-' . dechex($checksum);
+	}
+
+	/**
 	 * Gets the name of the document.
 	 *
 	 * @return string Name of the document.
@@ -219,6 +245,8 @@ class Document {
 	 */
 	public function set_name($name) {
 		$this->title = $name;
+		if (!$this->generate_archive_name_slug())
+			$this->generate_id();
 	}
 
 	/**
@@ -237,6 +265,8 @@ class Document {
 	 */
 	public function set_revision($revision) {
 		$this->revision = $revision;
+		if (!$this->generate_archive_name_slug())
+			$this->generate_id();
 	}
 
 	/**
@@ -255,30 +285,42 @@ class Document {
 	 */
 	public function set_description($description) {
 		$this->description = $description;
+		$this->generate_id();
 	}
 
 	/**
-	 * Creates an archive name slug based on the archive properties.
+	 * Generates an archive name slug based on the archive properties.
 	 *
-	 * @return string Generated archive name slug.
+	 * @return boolean True if we had to generate a slug, false otherwise.
 	 */
-	protected function create_archive_name_slug() {
+	protected function generate_archive_name_slug() {
+		// Do we even have to generate it?
+		if (!is_null($this->get_archive_name(false)))
+			return false;
+
 		// Only allow letters and numbers.
-		$slug = preg_replace('/[^A-Za-z0-9\-]/', '-', $this->get_name());
+		$slug = preg_replace('/[^A-Za-z0-9\-]/', '-',
+			$this->get_name() . '-' . $this->get_revision());
 
-		// Remove duplicate slashes.
-		$slug = preg_replace('/\-{2,}/', '-', $slug);
+		// Remove duplicate slashes and make it lowercase.
+		$slug = strtolower(preg_replace('/\-{2,}/', '-', $slug));
 
-		// Make it lowercase.
-		return strtolower($slug);
+		// Set the new archive name.
+		$this->set_archive_name($slug);
+		return true;
 	}
 
 	/**
 	 * Gets the archive name of this document.
 	 * 
-	 * @return string Archive name of the document.
+	 * @param  boolean $auto_gen Automatically generate it if one doesn't exist.
+	 * @return string            Archive name of the document.
 	 */
-	public function get_archive_name() {
+	public function get_archive_name($auto_gen = true) {
+		// Have we already generated our archive name?
+		if ($auto_gen && is_null($this->archive_name))
+			$this->generate_archive_name_slug();
+
 		return $this->archive_name;
 	}
 
@@ -289,6 +331,7 @@ class Document {
 	 */
 	public function set_archive_name($name) {
 		$this->archive_name = $name;
+		$this->generate_id();
 	}
 
 	/**
@@ -370,6 +413,7 @@ class Document {
 	 */
 	public function set_categories($categories) {
 		$this->categories = $categories;
+		$this->generate_id();
 	}
 
 	/**
@@ -379,5 +423,6 @@ class Document {
 	 */
 	public function add_category($category) {
 		array_push($this->categories, $category);
+		$this->generate_id();
 	}
 }

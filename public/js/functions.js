@@ -11,15 +11,15 @@
 /**
  * Toggles a checkbox checked state.
  *
- * @param {event}  event        Element event handler.
- * @param {string} checkbox_id  The checkbox identifier. Should be {undefined}
- *                              if attached to the checkbox itself.
+ * @param {Event} event Element event handler.
+ * @param {string} [checkboxId] The checkbox identifier. Optional if attached to
+ * the checkbox itself.
  */
-function toggleCheckboxCheck(event, checkbox_id) {
+function toggleCheckboxCheck(event, checkboxId) {
 	// Check if we are clicking inside or outside of the checkbox.
-	if (checkbox_id !== undefined) {
+	if (checkboxId !== undefined) {
 		// Click came from outside of the checkbox.
-		var checkbox = $("#" + checkbox_id);
+		var checkbox = $("#" + checkboxId);
 		checkbox.prop("checked", !checkbox.prop("checked"));
 	} else {
 		// Looks like we are clicking the checkbox.
@@ -34,8 +34,8 @@ function toggleCheckboxCheck(event, checkbox_id) {
 /**
  * Toggles the strikethrough style of an element.
  *
- * @param {element} elem  The element to have the strikethrough class toggled.
- * @param {event}   event Element event handler. Optional.
+ * @param {Element} elem The element to have the strikethrough class toggled.
+ * @param {Event} [event] Element event handler.
  */
 function toggleStrikethrough(elem, event) {
 	$(elem).toggleClass("refdes-crossed");
@@ -50,7 +50,7 @@ function toggleStrikethrough(elem, event) {
  * highlight the text ONLY when double-clicking it. This is useful for text
  * elements with "onclick" events.
  *
- * @param {event} event The event object of the element to be used to block.
+ * @param {Event} event The event object of the element to be used to block.
  */
 function preventDblClickHighlight(event) {
 	if (event.detail <= 1)
@@ -62,47 +62,43 @@ function preventDblClickHighlight(event) {
 /**
  * Toggles the visibility of the specified element.
  *
- * @param {string}  elem    XPath of the element to have its visibility toggled.
- * @param {element} sender  Optional. Element object that triggered this event
- *                          to have its innerHTML property changed.
- * @param {string}  moremsg Optional. 'More Information' message that the sender
- *                          is supposed to display. (Default: "More Information")
- * @param {string}  lessmsg Optional. 'Less Information' message that the sender
- *                          is supposed to display. (Default: "Less Information")
+ * @param {string} elem XPath of the element to have its visibility toggled.
+ * @param {Element} [sender] Element object that triggered this event to have
+ *                           its innerHTML property changed.
+ * @param {string} [moreMsg="More Information"] Message that the sender is
+ * supposed to display for more information.
+ * @param {string} [lessMsg="Less Information"] Message that the sender is
+ * supposed to display for less information.
  */
-function toggleElementVisibility(elem, sender, moremsg, lessmsg) {
+function toggleElementVisibility(elem, sender, moreMsg, lessMsg) {
+	moreMsg = (typeof moreMsg !== "undefined") ? moreMsg : "More Information";
+	lessMsg = (typeof lessMsg !== "undefined") ? lessMsg : "Less Information";
 	var elem = $(elem);
 
-	// Setup some defaults just in case.
-	if (moremsg === undefined)
-		moremsg = 'More Information';
-	if (lessmsg === undefined)
-		lessmsg = 'Less Information';
-
 	// Toggle things around.
-	if (elem.hasClass('d-none')) {
+	if (elem.hasClass("d-none")) {
 		// Turn visible.
-		elem.removeClass('d-none');
+		elem.removeClass("d-none");
 
 		// Change the message in the sender element.
 		if (sender !== undefined)
-			sender.innerHTML = lessmsg;
+			sender.innerHTML = lessMsg;
 	} else {
 		// Turn invisible.
-		elem.addClass('d-none');
+		elem.addClass("d-none");
 
 		// Change the message in the sender element.
 		if (sender !== undefined)
-			sender.innerHTML = moremsg;
+			sender.innerHTML = moreMsg;
 	}
 }
 
 /**
  * Generates a random number between min (inclusive) and max (exclusive).
  *
- * @param  {number} min The minimum, inclusive, number in the range.
- * @param  {number} max The maximum, exclusive, number in the range.
- * @return {number}     A random number in the specified range.
+ * @param {number} min The minimum, inclusive, number in the range.
+ * @param {number} max The maximum, exclusive, number in the range.
+ * @return {number} A random number in the specified range.
  */
 function randomInRange(min, max) {
 	return Math.random() * (max - min) + min;
@@ -114,8 +110,8 @@ function randomInRange(min, max) {
  * @param {number} duration Duration of the animation in seconds.
  */
 function congratsConfetti(duration) {
-	var duration_ms = duration * 1000;
-	var animationEnd = Date.now() + duration_ms;
+	var durationMillis = duration * 1000;
+	var animationEnd = Date.now() + durationMillis;
 	var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
 	// Pop confetti at a pre-determined interval.
@@ -127,7 +123,7 @@ function congratsConfetti(duration) {
 		}
 
 		// Determine the amount of particles to use.
-		var particleCount = 200 * (timeLeft / duration_ms);
+		var particleCount = 200 * (timeLeft / durationMillis);
 
 		// Since particles fall down, start a bit higher than random.
 		confetti(Object.assign({}, defaults, { particleCount,
