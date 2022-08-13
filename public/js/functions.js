@@ -12,8 +12,8 @@
  * Toggles a checkbox checked state.
  *
  * @param {Event} event Element event handler.
- * @param {string} checkboxId The checkbox identifier. Should be {undefined} if
- * attached to the checkbox itself.
+ * @param {string} [checkboxId] The checkbox identifier. Optional if attached to
+ * the checkbox itself.
  */
 function toggleCheckboxCheck(event, checkboxId) {
 	// Check if we are clicking inside or outside of the checkbox.
@@ -35,7 +35,7 @@ function toggleCheckboxCheck(event, checkboxId) {
  * Toggles the strikethrough style of an element.
  *
  * @param {Element} elem The element to have the strikethrough class toggled.
- * @param {Event} event Element event handler. Optional.
+ * @param {Event} [event] Element event handler.
  */
 function toggleStrikethrough(elem, event) {
 	$(elem).toggleClass("refdes-crossed");
