@@ -79,16 +79,18 @@
 				</thead>
 				<tbody>
 					<?php foreach ($category->get_components() as $component) { ?>
-						<?php $chk_id = 'chk-' . $component->get_id(); ?>
+						<?php $chk_id = $component->get_id() . '-picked'; ?>
 
-						<tr id="<?= $component->get_id() ?>" onclick="toggleCheckboxCheck(event, '<?= $chk_id ?>')" onmousedown="preventDblClickHighlight(event)">
-							<td class="col-1 text-center"><input id="<?= $chk_id ?>" class="chk-picked" type="checkbox" onclick="toggleCheckboxCheck(event)"></td>
+						<tr id="<?= $component->get_id() ?>" onclick="storage.handleToggleComponentPicked(event, '<?= $component->get_id() ?>')" onmousedown="preventDblClickHighlight(event)">
+							<td class="col-1 text-center"><input id="<?= $chk_id ?>" class="chk-picked" type="checkbox" onclick="storage.handleToggleComponentPicked(event, '<?= $component->get_id() ?>')"></td>
 							<td class="col-1 text-center"><?= $component->get_quantity() * $lot_size ?></td>
 							<th scope="row" class="col-2"><?= $component->get_name() ?></th>
 							<td class="col-1 text-center"><?= $component->get_value() ?></td>
 							<td class="col-4">
 								<?php foreach ($component->get_refdes() as $refdes) { ?>
-									<span class="refdes" onclick="toggleStrikethrough(this, event)" onmousedown="preventDblClickHighlight(event)"><?= $refdes ?></span>
+									<span class="refdes" onclick="toggleStrikethrough(this, event)" onmousedown="preventDblClickHighlight(event)">
+										<?= $refdes ?>
+									</span>
 								<?php } ?>
 							</td>
 							<td class="col-2"><?= $component->get_description() ?></td>
@@ -105,6 +107,7 @@
 
 <script src="<?= href('/js/storage/picklist.js') ?>"></script>
 <script>
+	// Handle the state storage.
 	var storage = new PickListStorage("<?= $picklist->get_id() ?>");
 	storage.load();
 	storage.apply();

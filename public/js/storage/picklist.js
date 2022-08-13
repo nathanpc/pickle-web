@@ -149,3 +149,25 @@ PickListStorage.prototype.setComponentRefDesPicked = function (id, refdes, state
 	// Looks like we've got a brand new component.
 	this.addComponent(id, false, (state) ? [ refdes ] : [], save);
 };
+
+/**
+ * Applies the loaded settings to the current page.
+ */
+PickListStorage.prototype.apply = function () {
+	// TODO
+	console.log("Apply settings for " + this.storageKey);
+};
+
+/**
+ * Handles the frontend aspect of the user toggling the picked status of a
+ * component.
+ * 
+ * @param {Event} event Element event handler.
+ * @param {string} componentId ID of the component involved.
+ */
+PickListStorage.prototype.handleToggleComponentPicked = function (event, componentId) {
+	var checkboxId = componentId + "-picked";
+
+	toggleCheckboxCheck(event, checkboxId);
+	this.setComponentPicked(componentId, $("#" + checkboxId).prop("checked"));
+};
