@@ -10,6 +10,7 @@ namespace PickLE;
 require __DIR__ . "/../vendor/autoload.php";
 
 class Component {
+	private $id;
 	private $picked;
 	private $name;
 	private $value;
@@ -29,12 +30,46 @@ class Component {
 	 */
 	public function __construct($picked = false, $name = null, $value = null,
 			$description = null, $package = null, $refdes = array()) {
+		$this->id = null;
 		$this->picked = $picked;
 		$this->name = $name;
 		$this->value = $value;
 		$this->description = $description;
 		$this->package = $package;
 		$this->refdes = $refdes;
+	}
+
+	/**
+	 * Gets a unique ID for this component. Used for primarily for front-end
+	 * IDs.
+	 *
+	 * @return string Unique ID for this component.
+	 */
+	public function get_id() {
+		// Have we already generated our ID?
+		if (is_null($this->id))
+			$this->generate_id();
+
+		return $this->id;
+	}
+
+	/**
+	 * Generates the unique ID for this component.
+	 */
+	protected function generate_id() {
+		// Lowercase the name and substitute all non-characters for slashes.
+		$this->id = preg_replace('/[^A-Za-z0-9\-]/', '-', strtolower($this->name));
+		$this->id = preg_replace('/\-{2,}/', '-', $this->id);
+
+		// Checksum by summing up all of the character values in its parameters.
+		$checksum = 0;
+		$chkstr = $this->value . $this->description . $this->package . $this->get_refdes_str();
+		foreach (str_split($chkstr) as $char) {
+			$checksum += ord($char);
+		}
+
+		// Append quantity and the checksum in hexadecimal.
+		$this->id .= '-' . $this->get_quantity()  . '-' . dechex($checksum);
 	}
 
 	/**
@@ -81,6 +116,7 @@ class Component {
 	 */
 	public function set_name($name) {
 		$this->name = $name;
+		$this->generate_id();
 	}
 
 	/**
@@ -111,6 +147,7 @@ class Component {
 	 */
 	public function set_value($value) {
 		$this->value = $value;
+		$this->generate_id();
 	}
 
 	/**
@@ -141,6 +178,7 @@ class Component {
 	 */
 	public function set_description($description) {
 		$this->description = $description;
+		$this->generate_id();
 	}
 
 	/**
@@ -171,6 +209,7 @@ class Component {
 	 */
 	public function set_package($package) {
 		$this->package = $package;
+		$this->generate_id();
 	}
 
 	/**
@@ -183,12 +222,23 @@ class Component {
 	}
 
 	/**
+	 * Gets the reference designators of the component as a single string with
+	 * each reference designator separated by a single space.
+	 *
+	 * @return string Reference designators of the component as a single string.
+	 */
+	public function get_refdes_str() {
+		return implode(' ', $this->refdes);
+	}
+
+	/**
 	 * Sets the reference designators of the component.
 	 * 
 	 * @param array $refdes Reference designators of the component.
 	 */
 	public function set_refdes($refdes) {
 		$this->refdes = $refdes;
+		$this->generate_id();
 	}
 
 	/**
@@ -199,5 +249,6 @@ class Component {
 	 */
 	public function add_refdes($refdes) {
 		array_push($this->refdes, $refdes);
+		$this->generate_id();
 	}
 }

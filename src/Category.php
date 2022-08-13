@@ -10,6 +10,7 @@ namespace PickLE;
 require __DIR__ . "/../vendor/autoload.php";
 
 class Category {
+	private $id;
 	private $name;
 	private $components;
 
@@ -20,8 +21,43 @@ class Category {
 	 * @param array  $components Components inside this category.
 	 */
 	public function __construct($name = null, $components = array()) {
+		$this->id = null;
 		$this->name = $name;
 		$this->components = $components;
+	}
+
+	/**
+	 * Gets a unique ID for this component. Used for primarily for front-end
+	 * IDs.
+	 *
+	 * @return string Unique ID for this component.
+	 */
+	public function get_id() {
+		// Have we already generated our ID?
+		if (is_null($this->id))
+			$this->generate_id();
+
+		return $this->id;
+	}
+
+	/**
+	 * Generates the unique ID for this component.
+	 */
+	protected function generate_id() {
+		// Lowercase the name and substitute all non-characters for slashes.
+		$this->id = preg_replace('/[^A-Za-z0-9\-]/', '-', strtolower($this->name));
+		$this->id = preg_replace('/\-{2,}/', '-', $this->id);
+
+		// Checksum by summing up all of the character values in its components IDs.
+		$checksum = 0;
+		foreach ($this->components as $component) {
+			foreach (str_split($component->get_id()) as $char) {
+				$checksum += ord($char);
+			}
+		}
+
+		// Append the checksum in hexadecimal.
+		$this->id = $this->id . '-' . dechex($checksum);
 	}
 
 	/**
@@ -40,6 +76,7 @@ class Category {
 	 */
 	public function set_name($name) {
 		$this->name = $name;
+		$this->generate_id();
 	}
 
 	/**
@@ -58,6 +95,7 @@ class Category {
 	 */
 	public function set_components($components) {
 		$this->components = $components;
+		$this->generate_id();
 	}
 
 	/**
@@ -67,5 +105,6 @@ class Category {
 	 */
 	public function add_component($component) {
 		array_push($this->components, $component);
+		$this->generate_id();
 	}
 }
