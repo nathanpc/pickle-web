@@ -217,8 +217,11 @@ class Document {
 		// Checksum by summing up all of the character values in its component IDs.
 		$checksum = 0;
 		foreach ($this->categories as $category) {
-			foreach (str_split($category->get_id()) as $char) {
-				$checksum += ord($char);
+			$cat_id = $category->get_id();
+			$len = strlen($cat_id);
+
+			for ($i = 0; $i < $len; $i++) {
+				$checksum += ord($cat_id[$i]);
 			}
 		}
 
@@ -292,7 +295,7 @@ class Document {
 	 */
 	protected function generate_archive_name_slug() {
 		// Do we even have to generate it?
-		if (!is_null($this->get_archive_name()))
+		if (!is_null($this->get_archive_name(false)))
 			return false;
 
 		// Only allow letters and numbers.
@@ -310,11 +313,12 @@ class Document {
 	/**
 	 * Gets the archive name of this document.
 	 * 
-	 * @return string Archive name of the document.
+	 * @param  boolean $auto_gen Automatically generate it if one doesn't exist.
+	 * @return string            Archive name of the document.
 	 */
-	public function get_archive_name() {
+	public function get_archive_name($auto_gen = true) {
 		// Have we already generated our archive name?
-		if (is_null($this->archive_name))
+		if ($auto_gen && is_null($this->archive_name))
 			$this->generate_archive_name_slug();
 
 		return $this->archive_name;

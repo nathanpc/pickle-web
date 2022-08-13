@@ -64,8 +64,9 @@ class Component {
 		// Checksum by summing up all of the character values in its parameters.
 		$checksum = 0;
 		$chkstr = $this->value . $this->description . $this->package . $this->get_refdes_str();
-		foreach (str_split($chkstr) as $char) {
-			$checksum += ord($char);
+		$len = strlen($chkstr);
+		for ($i = 0; $i < $len; $i++) {
+			$checksum += ord($chkstr[$i]);
 		}
 
 		// Append quantity and the checksum in hexadecimal.

@@ -51,8 +51,11 @@ class Category {
 		// Checksum by summing up all of the character values in its components IDs.
 		$checksum = 0;
 		foreach ($this->components as $component) {
-			foreach (str_split($component->get_id()) as $char) {
-				$checksum += ord($char);
+			$comp_id = $component->get_id();
+			$len = strlen($comp_id);
+
+			for ($i = 0; $i < $len; $i++) {
+				$checksum += ord($comp_id[$i]);
 			}
 		}
 
