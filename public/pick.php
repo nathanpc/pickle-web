@@ -81,14 +81,15 @@
 					<?php foreach ($category->get_components() as $component) { ?>
 						<?php $chk_id = $component->get_id() . '-picked'; ?>
 
-						<tr id="<?= $component->get_id() ?>" onclick="storage.handleToggleComponentPicked(event, '<?= $component->get_id() ?>')" onmousedown="preventDblClickHighlight(event)">
-							<td class="col-1 text-center"><input id="<?= $chk_id ?>" class="chk-picked" type="checkbox" onclick="storage.handleToggleComponentPicked(event, '<?= $component->get_id() ?>')"></td>
+						<tr id="<?= $component->get_id() ?>" onclick="storage.handleToggleComponentPicked('<?= $component->get_id() ?>', event)" onmousedown="preventDblClickHighlight(event)">
+							<td class="col-1 text-center"><input id="<?= $chk_id ?>" class="chk-picked" type="checkbox" onclick="storage.handleToggleComponentPicked('<?= $component->get_id() ?>', event)"></td>
 							<td class="col-1 text-center"><?= $component->get_quantity() * $lot_size ?></td>
 							<th scope="row" class="col-2"><?= $component->get_name() ?></th>
 							<td class="col-1 text-center"><?= $component->get_value() ?></td>
 							<td class="col-4">
 								<?php foreach ($component->get_refdes() as $refdes) { ?>
-									<span class="refdes" onclick="toggleStrikethrough(this, event)" onmousedown="preventDblClickHighlight(event)">
+									<?php $refdes_id = $component->get_id() . '-refdes-' . strtolower($refdes); ?>
+									<span id="<?= $refdes_id ?>" class="refdes" onclick="storage.handleToggleRefDesPicked('<?= $component->get_id() ?>', '<?= $refdes ?>', event)" onmousedown="preventDblClickHighlight(event)">
 										<?= $refdes ?>
 									</span>
 								<?php } ?>

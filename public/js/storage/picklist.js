@@ -162,12 +162,28 @@ PickListStorage.prototype.apply = function () {
  * Handles the frontend aspect of the user toggling the picked status of a
  * component.
  * 
- * @param {Event} event Element event handler.
  * @param {string} componentId ID of the component involved.
+ * @param {Event} event Element event handler.
  */
-PickListStorage.prototype.handleToggleComponentPicked = function (event, componentId) {
+PickListStorage.prototype.handleToggleComponentPicked = function (componentId, event) {
 	var checkboxId = componentId + "-picked";
 
 	toggleCheckboxCheck(event, checkboxId);
 	this.setComponentPicked(componentId, $("#" + checkboxId).prop("checked"));
+};
+
+/**
+ * Handles the frontend aspect of the user toggling the picked status of a
+ * reference designator.
+ * 
+ * @param {string} componentId ID of the component involved.
+ * @param {string} refdes Reference designator.
+ * @param {Event} [event] Element event handler.
+ */
+PickListStorage.prototype.handleToggleRefDesPicked = function (componentId, refdes, event) {
+	var elemId = componentId + "-refdes-" + refdes.toLowerCase();
+
+	toggleStrikethrough(document.getElementById(elemId), event);
+	this.setComponentRefDesPicked(componentId, refdes,
+		$("#" + elemId).hasClass("refdes-crossed"));
 };
