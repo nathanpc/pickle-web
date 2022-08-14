@@ -136,3 +136,20 @@ function get_picklist_from_req() {
 	// Ok...
 	return NULL;
 }
+
+/**
+ * Renders a standardized error page in case something bad happens.
+ *
+ * @param  string $page Name of the template page in 'error_pages' to be rendered.
+ * @param  array  $vars Array with the ('VARIABLE_NAME', 'VARIABLE_VALUE') pairs.
+ * @return string       Whatever the page 'require' returned.
+ */
+function render_error_page($page, $vars) {
+	// Define the variables.
+	foreach ($vars as $key => $value) {
+		define($key, $value);
+	}
+
+	// Render the error page.
+	return require(__DIR__ . "/../templates/error_pages/$page.php");
+}

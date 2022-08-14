@@ -2,43 +2,31 @@
 <?php require_once __DIR__ . "/../vendor/autoload.php"; ?>
 <?php $picklist = NULL; ?>
 <?php $lot_size = intval(urlparam('lotsize', 1)); ?>
+<?php
+try {
+	// Try to get and parse the requested pick list.
+	$picklist = get_picklist_from_req();
+
+	// Check if the requested archive wasn't found.
+	if (is_null($picklist)) {
+		return render_error_page('not_found', array(
+			'PAGE_TITLE' => 'Archive Not Found',
+			'ERROR_MESSAGE' => "The archive that you've requested was not " .
+				"found. Maybe check out the <a href=" . href('/archive') .
+				">archives page</a>?"
+		));
+	}
+} catch (Exception $e) {
+	// Parsing error.
+	return render_error_page('exception', array(
+		'PAGE_TITLE' => 'Parsing Error',
+		'EXCEPTION_OBJECT' => $e
+	));
+}
+?>
+
 <?php define('PAGE_TITLE', 'Pick List'); ?>
 <?php require(__DIR__ . "/../templates/head.php"); ?>
-
-<?php try {
-	$picklist = get_picklist_from_req();
-} catch (Exception $e) { ?>
-	<!-- Parsing Error -->
-	<?php http_response_code(500); ?>
-	<div class="jumbotron">
-		<h1 class="display-4">Parsing Error</h1>
-		<p class="lead">
-			<?= htmlspecialchars($e->getMessage()) ?>
-		</p>
-
-		<br>
-
-		<pre><code><?= htmlspecialchars($e->getTraceAsString()) ?></code></pre>
-	</div>
-
-	<?php require(__DIR__ . "/../templates/footer.php"); ?>
-	<?php return; ?>
-<?php } ?>
-
-<?php if (is_null($picklist)) { ?>
-	<!-- Archive Not Found -->
-	<?php http_response_code(404); ?>
-	<div class="jumbotron">
-		<h1 class="display-4">Archive not Found</h1>
-		<p class="lead">
-			The archive that you've requested was not found. Maybe check out the
-			<a href="<?= href('archive') ?>">archives page</a>?
-		</p>
-	</div>
-
-	<?php require(__DIR__ . "/../templates/footer.php"); ?>
-	<?php return; ?>
-<?php } ?>
 
 <!-- Document Information -->
 <h3>
