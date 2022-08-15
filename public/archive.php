@@ -58,8 +58,8 @@
 					do so by going to the <a href="<?= href('/upload') ?>">Upload</a>
 					page and submitting a file or copy and pasting the contents
 					of one.
-					<br>
-					<br>
+				</p>
+				<p class="lead">
 					Your submissions are stored on your computer using
 					<a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">localStorage</a>
 					and will never be stored in our servers. This also means that
@@ -67,16 +67,6 @@
 					computer you'll have to re-upload it there.
 				</p>
 			</div>
-			<!--<div class="card">
-				<div class="card-body">
-					<h5 class="card-title">Sample Title</h5>
-					<p class="card-text">Sample description here!</p>
-
-					<a href="<?= href('/pick/test') ?>" class="card-link">
-						Rev Test
-					</a>
-				</div>
-			</div>-->
 		</div>
 	</div>
 </div>
@@ -88,7 +78,7 @@
 	// Load up the local archives list.
 	var localArchives = ArchiveStorage.list();
 	var container = document.getElementById("user");
-	
+
 	// Clear the user submissions tab if we have anything to put there.
 	if (localArchives.length > 0)
 		container.innerHTML = "";

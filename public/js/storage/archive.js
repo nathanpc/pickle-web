@@ -51,6 +51,8 @@ ArchiveStorage.list = function () {
  * Loads the archive from storage.
  * 
  * @param {string} [storedObject] Stringified object that was stored to be loaded.
+ * @returns {ArchiveStorage} The populated object or null if we couldn't parse
+ * the object.
  */
 ArchiveStorage.prototype.load = function (storedObject) {
 	// Fetch the object string only if necessary.
@@ -58,11 +60,15 @@ ArchiveStorage.prototype.load = function (storedObject) {
 		storedObject = localStorage.getItem(this.storageKey);
 
 	// Ensure we actually got anything to parse.
-	if (archive !== null) {
-		this.archive = JSON.parse(archive);
+	if (storedObject !== null) {
+		this.archive = JSON.parse(storedObject);
 		this.documentId = this.archive.id;
 		this.storageKey = "archive_" + this.documentId;
+
+		return this;
 	}
+
+	return null;
 };
 
 /**
@@ -70,6 +76,13 @@ ArchiveStorage.prototype.load = function (storedObject) {
  */
 ArchiveStorage.prototype.save = function () {
 	localStorage.setItem(this.storageKey, JSON.stringify(this.archive));
+};
+
+/**
+ * Deletes the archive from storage.
+ */
+ArchiveStorage.prototype.delete = function () {
+	localStorage.removeItem(this.storageKey);
 };
 
 /**
@@ -94,12 +107,23 @@ ArchiveStorage.prototype.getHtmlCard = function () {
 	text.innerText = this.archive.description;
 	body.appendChild(text);
 
-	var link = document.createElement("a");
-	link.className = "card-link";
-	link.innerText = "Rev " + this.archive.revision;
-	link.href = "/pick/local/" + this.archive.id;
-	body.appendChild(link);
+	var form = document.createElement("form");
+	form.method = "POST";
+	form.action = "/pick/local/" + this.archive.id;
 
+	var hiddenContents = document.createElement("input");
+	hiddenContents.type = "hidden";
+	hiddenContents.name = "archive-text";
+	hiddenContents.value = this.archive.file;
+	form.appendChild(hiddenContents);
+
+	var button = document.createElement("button");
+	button.type = "submit";
+	button.className = "btn btn-link card-link m-0 p-0";
+	button.innerText = "Rev " + this.archive.revision;
+	form.appendChild(button);
+
+	body.appendChild(form);
 	card.appendChild(body);
 	return card;
 };
@@ -113,4 +137,14 @@ ArchiveStorage.prototype.getHtmlCard = function () {
 ArchiveStorage.prototype.appendCardTo = function (containerId) {
 	var container = document.getElementById(containerId);
 	container.appendChild(this.getHtmlCard());
+};
+
+/**
+ * Navigates to the pick page for this local archive.
+ */
+ArchiveStorage.prototype.browsePickPage = function () {
+	console.log("GO /pick/local/" + this.documentId);
+	formSubmit("POST", "/pick/local/" + this.documentId, {
+		"archive-text": this.archive.file
+	});
 };
