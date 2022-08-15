@@ -51,7 +51,7 @@ try {
 		<div class=" btn-toolbar mb-4" role="toolbar" aria-label="Toolbar with button groups">
 			<!-- Source Actions -->
 			<div class="btn-group mr-5" role="group" aria-label="Source actions button group">
-				<button type="button" class="btn btn-secondary">
+				<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#source-modal">
 					Edit Source
 				</button>
 			</div>
@@ -61,17 +61,17 @@ try {
 				<button type="button" class="btn btn-secondary" onclick="archive.save(); archive.browsePickPage();">
 					Save Locally
 				</button>
-				<button type=" button" class="btn btn-secondary" onclick="archive.delete()">
+				<button type=" button" class="btn btn-secondary" onclick="archive.delete(true)">
 					Delete
 				</button>
 			</div>
 
 			<!-- Clearing Actions -->
 			<div class="btn-group mr-5" role="group" aria-label="Clearing actions button group">
-				<button type="button" class="btn btn-secondary" onclick="pickState.clearPicks()">
+				<button type="button" class="btn btn-secondary" onclick="pickState.clearPicks(true)">
 					Clear Picks
 				</button>
-				<button type=" button" class="btn btn-secondary" onclick="pickState.clearPlacements()">
+				<button type=" button" class="btn btn-secondary" onclick="pickState.clearPlacements(true)">
 					Clear Placements
 				</button>
 			</div>

@@ -80,9 +80,21 @@ ArchiveStorage.prototype.save = function () {
 
 /**
  * Deletes the archive from storage.
+ * 
+ * @param {boolean} [askConfirm=false] Ask the user for confirmation?
  */
-ArchiveStorage.prototype.delete = function () {
+ArchiveStorage.prototype.delete = function (askConfirm) {
+	askConfirm = (typeof askConfirm !== "undefined") ? askConfirm : false;
+
+	// Confirm the action with the user.
+	if (askConfirm) {
+		if (!window.confirm("Are you sure you want to delete this pick list archive?"))
+			return;
+	}
+
+	// Remove the item from local storage and redirect the user to the archive page.
 	localStorage.removeItem(this.storageKey);
+	window.location.href = "/archive";
 };
 
 /**

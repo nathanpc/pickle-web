@@ -226,8 +226,18 @@ PickListStorage.prototype.getRefDesElementId = function (componentId, refdes) {
 
 /**
  * Clears all of the picks from the page and in localStorage.
+ * 
+ * @param {boolean} [askConfirm=false] Ask the user for confirmation?
  */
-PickListStorage.prototype.clearPicks = function () {
+PickListStorage.prototype.clearPicks = function (askConfirm) {
+	askConfirm = (typeof askConfirm !== "undefined") ? askConfirm : false;
+
+	// Confirm the action with the user.
+	if (askConfirm) {
+		if (!window.confirm("Are you sure you want to clear all picked items?"))
+			return;
+	}
+
 	// Go through the components unchecking their checkboxes.
 	for (var i = 0; i < this.pickState.components.length; i++) {
 		var component = this.pickState.components[i];
@@ -245,8 +255,18 @@ PickListStorage.prototype.clearPicks = function () {
 /**
  * Clears all of the reference designator placements from the page and in
  * localStorage.
+ * 
+ * @param {boolean} [askConfirm=false] Ask the user for confirmation?
  */
-PickListStorage.prototype.clearPlacements = function () {
+PickListStorage.prototype.clearPlacements = function (askConfirm) {
+	askConfirm = (typeof askConfirm !== "undefined") ? askConfirm : false;
+
+	// Confirm the action with the user.
+	if (askConfirm) {
+		if (!window.confirm("Are you sure you want to clear all placed items?"))
+			return;
+	}
+
 	// Go through the components unchecking their checkboxes.
 	for (var i = 0; i < this.pickState.components.length; i++) {
 		var component = this.pickState.components[i];
