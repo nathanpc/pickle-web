@@ -17,6 +17,7 @@ class Document {
 	private $description;
 	private $properties;
 	private $categories;
+	private $source;
 
 	// Constants
 	protected const ARCHIVE_DIR = __DIR__ . "/../resources/pkl/";
@@ -41,6 +42,7 @@ class Document {
 		$this->archive_name = NULL;
 		$this->properties = $properties;
 		$this->categories = $categories;
+		$this->source = NULL;
 	}
 
 	/**
@@ -148,6 +150,9 @@ class Document {
 	 * @param string $contents Contents of a PickLE document.
 	 */
 	protected function parse($contents) {
+		// Save the contents.
+		$this->source = $contents;
+
 		// Setup the request.
 		$opts = array(
 			'http' => array(
@@ -424,5 +429,14 @@ class Document {
 	public function add_category($category) {
 		array_push($this->categories, $category);
 		$this->generate_id();
+	}
+
+	/**
+	 * Gets the source code for this document.
+	 *
+	 * @return string Source code of the document.
+	 */
+	public function get_source_code() {
+		return $this->source;
 	}
 }
