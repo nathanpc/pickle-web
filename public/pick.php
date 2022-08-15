@@ -68,10 +68,10 @@ try {
 
 			<!-- Clearing Actions -->
 			<div class="btn-group mr-5" role="group" aria-label="Clearing actions button group">
-				<button type="button" class="btn btn-secondary">
+				<button type="button" class="btn btn-secondary" onclick="pickState.clearPicks()">
 					Clear Picks
 				</button>
-				<button type="button" class="btn btn-secondary">
+				<button type=" button" class="btn btn-secondary" onclick="pickState.clearPlacements()">
 					Clear Placements
 				</button>
 			</div>

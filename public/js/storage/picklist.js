@@ -223,3 +223,45 @@ PickListStorage.prototype.getComponentCheckboxId = function (componentId) {
 PickListStorage.prototype.getRefDesElementId = function (componentId, refdes) {
 	return componentId + "-refdes-" + refdes.toLowerCase();
 };
+
+/**
+ * Clears all of the picks from the page and in localStorage.
+ */
+PickListStorage.prototype.clearPicks = function () {
+	// Go through the components unchecking their checkboxes.
+	for (var i = 0; i < this.pickState.components.length; i++) {
+		var component = this.pickState.components[i];
+		component.picked = false;
+
+		// Check the picked checkbox if applicable.
+		var elem = $("#" + this.getComponentCheckboxId(component.id));
+		elem.prop("checked", component.picked);
+	}
+
+	// Save changes.
+	this.save();
+};
+
+/**
+ * Clears all of the reference designator placements from the page and in
+ * localStorage.
+ */
+PickListStorage.prototype.clearPlacements = function () {
+	// Go through the components unchecking their checkboxes.
+	for (var i = 0; i < this.pickState.components.length; i++) {
+		var component = this.pickState.components[i];
+
+		// Go through the reference designators un-crossing them.
+		while (component.placedRefDes.length > 0) {
+			// Get the first reference designator and remove it from the list.
+			var refdes = component.placedRefDes.shift();
+
+			// Clears the reference designator label.
+			var elem = $("#" + this.getRefDesElementId(component.id, refdes));
+			elem.removeClass("refdes-crossed");
+		}
+	}
+
+	// Save changes.
+	this.save();
+};
