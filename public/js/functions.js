@@ -132,3 +132,13 @@ function congratsConfetti(duration) {
 			origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
 	}, 250);
 }
+
+// String.startsWith polyfill for older browsers.
+if (!String.prototype.startsWith) {
+	Object.defineProperty(String.prototype, 'startsWith', {
+		value: function (search, rawPos) {
+			var pos = rawPos > 0 ? rawPos | 0 : 0;
+			return this.substring(pos, pos + search.length) === search;
+		}
+	});
+}
