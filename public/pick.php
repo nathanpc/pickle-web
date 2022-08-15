@@ -94,6 +94,34 @@ try {
 	<br>
 <?php } ?>
 
+<!-- Source Code Modal -->
+<div class="modal fade" id="source-modal" tabindex="-1" aria-labelledby="source-modal-label" aria-hidden="true">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<form method="POST" action="<?= href('/pick') ?>" enctype="multipart/form-data">
+				<div class="modal-header">
+					<h5 class="modal-title" id="source-modal-label">PickLE Document Source</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<!-- Archive Source Code Text Area -->
+					<div class="mb-3">
+						<textarea class="form-control text-monospace" id="archive-text"
+							name="archive-text" rows="20" placeholder="Paste your PickLE archive contents here..."
+							required><?= $picklist->get_source_code() ?></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Save changes</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 <script src="<?= href('/js/storage/picklist.js') ?>"></script>
 <script>
 	// Handle the state storage.
