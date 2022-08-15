@@ -51,7 +51,23 @@
 
 		<!-- User Submissions Tab -->
 		<div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="user-tab">
-			<div class="card">
+			<div class="jumbotron">
+				<h1 class="display-4">Nothing to see here</h1>
+				<p class="lead">
+					Looks like you haven't uploaded any pick lists yet. You can
+					do so by going to the <a href="<?= href('/upload') ?>">Upload</a>
+					page and submitting a file or copy and pasting the contents
+					of one.
+					<br>
+					<br>
+					Your submissions are stored on your computer using
+					<a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">localStorage</a>
+					and will never be stored in our servers. This also means that
+					if you want to have access to your pick lists in another
+					computer you'll have to re-upload it there.
+				</p>
+			</div>
+			<!--<div class="card">
 				<div class="card-body">
 					<h5 class="card-title">Sample Title</h5>
 					<p class="card-text">Sample description here!</p>
@@ -60,11 +76,27 @@
 						Rev Test
 					</a>
 				</div>
-			</div>
+			</div>-->
 		</div>
 	</div>
 </div>
 
 <br>
+
+<script src="<?= href('/js/storage/archive.js') ?>"></script>
+<script>
+	// Load up the local archives list.
+	var localArchives = ArchiveStorage.list();
+	var container = document.getElementById("user");
+	
+	// Clear the user submissions tab if we have anything to put there.
+	if (localArchives.length > 0)
+		container.innerHTML = "";
+
+	// Populate the user submissions tab.
+	for (var i = 0; i < localArchives.length; i++) {
+		container.appendChild(localArchives[i].getHtmlCard());
+	}
+</script>
 
 <?php require(__DIR__ . "/../templates/footer.php"); ?>
