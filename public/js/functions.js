@@ -132,3 +132,46 @@ function congratsConfetti(duration) {
 			origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
 	}, 250);
 }
+
+/**
+ * Simulates the action of a user submitting a form dynamically.
+ * 
+ * @param {string} method HTTP method of the request.
+ * @param {string} action Equivalent to the <form> action attribute.
+ * @param {object} params Parameters of the request.
+ */
+function formSubmit(method, action, params) {
+	// Create the form element.
+	var form = document.createElement("form");
+	form.method = method;
+	form.action = action;
+
+	// Go through the parameters.
+	for (var key in params) {
+		// Is this key actually ours?
+		if (!params.hasOwnProperty(key))
+			continue;
+
+		// Build up the parameter hidden field.
+		var hidden = document.createElement("input");
+		hidden.type = "hidden";
+		hidden.name = key;
+		hidden.value = params[key];
+
+		form.appendChild(hidden);
+	}
+
+	// The form must be placed in the body before submitting.
+	document.body.appendChild(form);
+	form.submit();
+}
+
+// String.startsWith polyfill for older browsers.
+if (!String.prototype.startsWith) {
+	Object.defineProperty(String.prototype, 'startsWith', {
+		value: function (search, rawPos) {
+			var pos = rawPos > 0 ? rawPos | 0 : 0;
+			return this.substring(pos, pos + search.length) === search;
+		}
+	});
+}
