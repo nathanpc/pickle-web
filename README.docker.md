@@ -30,6 +30,18 @@ Then just run the project using `compose` like this:
 docker compose up -d
 ```
 
+### Environment Variables
+
+These are all of the environment variables that can be set in order to alter
+the configuration of the application:
+
+| Environment Variable | Default | Description |
+|--|--|--|
+| `PICKLE_APP_NAME` | `PickLE` | Application name branding (basically changes the titles) |
+| `PICKLE_API_PROTOCOL` | `http` | Protocol used by the frontend to communicate with the backend parser |
+| `PICKLE_API_HOST` | `parser` | Hostname/IP address of the backend parser |
+| `PICKLE_API_PORT` | `3000` | Port the backend parser is listening on |
+
 ### Volumes
 
 - `/var/www/app/resources/pkl` - Where you should store your PickLE archives that are stored on the server.

@@ -1,15 +1,19 @@
 version: '3.9'
 
 services:
-  web:
+  frontend:
     build: .
     depends_on:
-      - api
+      - parser
     restart: unless-stopped
     ports:
       - 8080:80
+    environment:
+      PICKLE_API_PROTOCOL: http
+      PICKLE_API_HOST: parser
+      PICKLE_API_PORT: 3000
     volumes:
       - ./resources:/var/www/app/resources
-  api:
+  parser:
     image: nathanpc/pickle:perl
     restart: unless-stopped
