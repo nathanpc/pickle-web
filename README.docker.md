@@ -11,7 +11,7 @@ version: '3'
 
 services:
   frontend:
-    image: nathanpc/pickle:webapp
+    image: nathanpc/pickle:web-frontend
     depends_on:
       - parser
     restart: unless-stopped
@@ -20,7 +20,7 @@ services:
     volumes:
       - ./resources:/var/www/app/resources
   parser:
-    image: nathanpc/pickle:perl
+    image: nathanpc/pickle:parser-api
     restart: unless-stopped
 ```
 

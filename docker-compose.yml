@@ -15,5 +15,5 @@ services:
     volumes:
       - ./resources:/var/www/app/resources
   parser:
-    image: nathanpc/pickle:perl
+    image: nathanpc/pickle:parser-api
     restart: unless-stopped
