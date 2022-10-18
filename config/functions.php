@@ -160,7 +160,18 @@ function render_error_page($page, $vars) {
  * @return string Currently active theme name.
  */
 function get_theme_name() {
-	return "bootstrap";
+	// Check if we are setting a theme.
+	if (isset($_GET["theme"])) {
+		setcookie("theme", $_GET["theme"]);
+		return preg_replace('/[^A-Za-z]/', "", $_GET["theme"]);
+	}
+
+	// Check if we have an active theme set.
+	if (isset($_COOKIE["theme"]))
+		return preg_replace('/[^A-Za-z]/', "", $_COOKIE["theme"]);
+
+	// Use the default determined by the configuration.
+	return PICKLE_APP_DEFAULT_THEME;
 }
 
 /**
