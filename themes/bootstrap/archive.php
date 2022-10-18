@@ -1,5 +1,5 @@
 <?php define('PAGE_TITLE', 'Archive'); ?>
-<?php require(__DIR__ . "/../templates/head.php"); ?>
+<?php require(__DIR__ . "/private/templates/head.php"); ?>
 <?php $archives = PickLE\Document::ListArchives(); ?>
 
 <h3>
@@ -89,4 +89,4 @@
 	}
 </script>
 
-<?php require(__DIR__ . "/../templates/footer.php"); ?>
+<?php require(__DIR__ . "/private/templates/footer.php"); ?>

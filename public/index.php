@@ -1,15 +1,26 @@
-<?php require(__DIR__ . "/../templates/head.php"); ?>
+<?php require_once __DIR__ . "/../config/config.php"; ?>
+<?php require_once __DIR__ . "/../config/functions.php"; ?>
+<?php require_once __DIR__ . "/../vendor/autoload.php"; ?>
+<?php
 
-<div class="jumbotron">
-	<h1 class="display-4">Welcome to <?= APP_NAME ?></h1>
+// Get our requested file path.
+$file_path = get_theme_path() . "/" . $_GET["path"];
 
-	<p class="lead">This web application allows you to work with <a href="https://github.com/nathanpc/pickle">PickLE</a> pick list documents anywhere you want, making it easy to build your next DIY project or start on that production run of your next product!</p>
+// Check if the requested file exists.
+if (!file_exists($file_path)) {
+	http_response_code(404);
+	echo "Couldn't find '$file_path'\n";
+	die();
+}
 
-	<hr class="my-4">
+// Reply with the correct MIME type.
+$file_ext = pathinfo($file_path, PATHINFO_EXTENSION);
+if ($file_ext != "php") {
+	$mime = new \Mimey\MimeTypes;
+	header("Content-Type: " . $mime->getMimeType($file_ext));
+}
 
-	<p>PickLE documents are simple, human-readable, component pick list declaration files for your projects. Gone are the days of printing out BOMs and crossing out parts you've already retrieved from your parts bins.</p>
+// Render the requested file.
+include $file_path;
 
-	<a class="btn btn-primary btn-lg" href="<?= href('/about') ?>" role="button">Learn more</a>
-</div>
-
-<?php require(__DIR__ . "/../templates/footer.php"); ?>
+?>

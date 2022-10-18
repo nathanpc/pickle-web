@@ -1,5 +1,3 @@
-<?php require_once __DIR__ . "/../config/functions.php"; ?>
-<?php require_once __DIR__ . "/../vendor/autoload.php"; ?>
 <?php $picklist = NULL; ?>
 <?php $lot_size = intval(urlparam('lotsize', 1)); ?>
 <?php
@@ -26,7 +24,7 @@ try {
 ?>
 
 <?php define('PAGE_TITLE', 'Pick List'); ?>
-<?php require(__DIR__ . "/../templates/head.php"); ?>
+<?php require(__DIR__ . "/private/templates/head.php"); ?>
 
 <!-- Document Information -->
 <h3>
@@ -192,4 +190,4 @@ try {
 	}
 </script>
 
-<?php require(__DIR__ . "/../templates/footer.php"); ?>
+<?php require(__DIR__ . "/private/templates/footer.php"); ?>

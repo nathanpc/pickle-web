@@ -151,5 +151,30 @@ function render_error_page($page, $vars) {
 	}
 
 	// Render the error page.
-	return require(__DIR__ . "/../templates/error_pages/$page.php");
+	return require(get_theme_path() . "/private/templates/error_pages/$page.php");
+}
+
+/**
+ * Gets the currently active theme name.
+ *
+ * @return string Currently active theme name.
+ */
+function get_theme_name() {
+	return "bootstrap";
+}
+
+/**
+ * Gets the path to a theme base directory.
+ *
+ * @param string $theme_name Name of the theme to be used. If one isn't supplied
+ *                           we'll use the currently active theme name.
+ *
+ * @return string Path to the theme's base directory.
+ */
+function get_theme_path($theme_name = NULL) {
+	// Use the currently active theme if one wasn't supplied.
+	if (is_null($theme_name))
+		$theme_name = get_theme_name();
+
+	return __DIR__ . "/../themes/$theme_name";
 }
