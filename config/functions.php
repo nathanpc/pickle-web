@@ -38,7 +38,7 @@ function site_title($desc = NULL) {
  * @return boolean         Are the page names the same?
  */
 function is_parent_page($parent) {
-	return basename($_SERVER['PHP_SELF'], '.php') == $parent;
+	return basename($_GET['path'], '.php') == $parent;
 }
 
 /**
@@ -88,26 +88,6 @@ function auto_link($str) {
 	$pretty_url = $url['host'] . ((isset($url['path'])) ? $url['path'] : '');
 
 	return '<a href="' . $str_url . '">' . $pretty_url . '</a>';
-}
-
-/**
- * Generates a Bootstrap Navbar item.
- * 
- * @param  string $label    Label of the item.
- * @param  string $href     Relative URL this item points to or a full URL.
- * @param  string $pagename Destination page script name without the extension.
- * @return string           Fully-populated Bootstrap navbar item.
- */
-function nav_item($label, $href, $pagename) {
-	// Are we the current page?
-	$current = is_parent_page($pagename);
-
-	// Make sure we deal with relative URLs.
-	if ($href[0] == '/')
-		$href = href($href);
-
-	// Build up some HTML.
-	return '<li class="nav-item' . (($current) ? ' active' : '') . '"><a class="nav-link" href="' . $href . '">' . $label . (($current) ? ' <span class="sr-only">(current)</span>' : '') . '</a></li>';
 }
 
 /**
