@@ -1,8 +1,7 @@
-# REMEMBER TO UPDATE CHANGES AT ../.htaccess AS WELL.
-
 DirectoryIndex index.php
 
 RewriteEngine On
+
 RewriteRule ^archive/?$ archive.php [L]
 RewriteRule ^about/?$ about.php [L]
 RewriteRule ^upload/?$ upload.php [L]
