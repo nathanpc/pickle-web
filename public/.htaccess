@@ -6,13 +6,13 @@ RedirectMatch 403 ^/private/.*$
 
 # Rewriting for pretty URLs.
 RewriteEngine On
-RewriteRule ^archive/?$ archive.php [QSA]
-RewriteRule ^about/?$ about.php [QSA]
-RewriteRule ^upload/?$ upload.php [QSA]
-RewriteRule ^pick/?$ pick.php [QSA]
-RewriteRule ^pick/([^\/]+)/?$ pick.php?archive=$1 [QSA]
-RewriteRule ^pick/([^\/]+)/([0-9]+)/?$ pick.php?archive=$1&lotsize=$2 [QSA]
-RewriteRule ^pick/local/([^\/]+)/?$ pick.php?local=$1 [QSA]
+RewriteRule ^archive/?$ archive.php [QSA,L]
+RewriteRule ^about/?$ about.php [QSA,L]
+RewriteRule ^upload/?$ upload.php [QSA,L]
+RewriteRule ^pick/?$ pick.php [QSA,L]
+RewriteRule ^pick/([^\/]+)/?$ index.php?path=pick.php&archive=$1 [QSA,L]
+RewriteRule ^pick/([^\/]+)/([0-9]+)/?$ index.php?path=pick.php&archive=$1&lotsize=$2 [QSA,L]
+RewriteRule ^pick/local/([^\/]+)/?$ index.php?path=pick.php&local=$1 [QSA,L]
 RewriteRule ^(.+)$ index.php?path=$1 [QSA,L]
 
 # Setup PHP configuration for debug.
