@@ -14,7 +14,7 @@ FROM alpine:3 AS apache-config
 RUN apk update && apk add \
 	php81-apache2 \
 	curl \
-	php-mbstring \
+	php81-mbstring \
 	sed \
 	&& rm -rf /var/cache/apk/*
 
@@ -28,15 +28,15 @@ FROM alpine:3
 RUN apk update && apk add \
 	php81-apache2 \
 	curl \
-	php-mbstring \
+	php81-mbstring \
 	&& rm -rf /var/cache/apk/*
 
 COPY --from=apache-config /etc/apache2/httpd.conf /etc/apache2/httpd.conf
 
 WORKDIR /var/www/app
 COPY --from=composer /src/app/vendor ./vendor
-COPY --from=composer /src/app/vendor/twbs/bootstrap/dist/ ./public/lib/bootstrap/
-COPY --from=composer /src/app/vendor/components/jquery/ ./public/lib/jquery/
+COPY --from=composer /src/app/vendor/twbs/bootstrap/dist/ ./themes/bootstrap/lib/bootstrap/
+COPY --from=composer /src/app/vendor/components/jquery/ ./themes/bootstrap/lib/jquery/
 COPY . ./
 
 EXPOSE 80
