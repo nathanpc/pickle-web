@@ -4,13 +4,15 @@
 <?php
 
 // Get our requested file path.
-$file_path = get_theme_path() . "/" . $_GET["path"];
+$file_path = get_theme_path() . "/" .
+	preg_replace('/\.\.[\\\/]/', "", $_GET["path"]);
 
 // Check if the requested file exists.
 if (!file_exists($file_path)) {
 	http_response_code(404);
 	header("Content-Type: text/plain");
 	echo "Couldn't find '$file_path'\n";
+
 	die();
 }
 
