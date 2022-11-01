@@ -14,6 +14,9 @@ require_once __DIR__ . "/../config/functions.php";
 require_once __DIR__ . "/../vendor/autoload.php";
 
 class Router {
+	const PRIVATE_DIR = "/private";
+	const TEMPLATE_DIR = self::PRIVATE_DIR . "/templates";
+
 	private $path;
 	private $theme;
 
@@ -78,7 +81,7 @@ class Router {
 		}
 
 		// Render the error page.
-		require $this->get_file_path("/private/templates/error_pages/$page.php");
+		require $this->get_template_file_path("/error_pages/$page.php");
 	}
 
 	/**
@@ -97,6 +100,18 @@ class Router {
 
 		// Build up a file system path.
 		return __DIR__ . "/../themes/" . $this->get_theme() . "/$path";
+	}
+
+	/**
+	 * Gets the file system path for a template from the current theme.
+	 *
+	 * @param string $path Clean path relative to the template directory inside
+	 *                     inside of the theme directory.
+	 *
+	 * @return string File system path inside the theme template directory.
+	 */
+	protected function get_template_file_path($path) {
+		return $this->get_file_path(self::TEMPLATE_DIR . "/$path");
 	}
 
 	/**
