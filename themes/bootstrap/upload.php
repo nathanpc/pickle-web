@@ -39,9 +39,31 @@
 					</label>
 				</div>
 
-				<button class="btn btn-primary" type="submit">
-					Submit Archive
-				</button>
+				<?php if (is_server_upload_enabled()) { ?>
+					<!-- Submit Options -->
+					<div class="form-row align-items-center justify-content-center">
+						<div class="col-auto">
+							<div class="input-group">
+								<select id="storage-location" name="storage-location" aria-label="Choose the location to store the archive">
+									<option value="local" selected>Local Storage</option>
+									<option value="server">Server</option>
+								</select>
+
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary" type="submit">
+										Submit Archive
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				<?php } else { ?>
+					<!-- Submit Locally Button -->
+					<input type="hidden" name="storage-location" value="local">
+					<button class="btn btn-primary" type="submit">
+						Submit Archive
+					</button>
+				<?php } ?>
 			</form>
 		</div>
 
@@ -87,9 +109,31 @@ R10 R12
 					</textarea>
 				</div>
 
-				<button class="btn btn-primary" type="submit">
-					Parse Text
-				</button>
+				<?php if (is_server_upload_enabled()) { ?>
+					<!-- Submit Options -->
+					<div class="form-row align-items-center justify-content-center">
+						<div class="col-auto">
+							<div class="input-group">
+								<select id="storage-location" name="storage-location" aria-label="Choose the location to store the archive">
+									<option value="local" selected>Local Storage</option>
+									<option value="server">Server</option>
+								</select>
+
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary" type="submit">
+										Parse Text
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				<?php } else { ?>
+					<!-- Submit Locally Button -->
+					<input type="hidden" name="storage-location" value="local">
+					<button class="btn btn-primary" type="submit">
+						Parse Text
+					</button>
+				<?php } ?>
 			</form>
 		</div>
 	</div>
