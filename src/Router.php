@@ -204,7 +204,7 @@ class Router {
 	 */
 	protected function update_cookie($force = false) {
 		if (isset($_GET["theme"]) || $force) {
-			setcookie("theme", $this->theme);
+			setcookie("theme", $this->theme, 0, "/");
 		}
 	}
 }
