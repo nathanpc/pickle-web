@@ -46,8 +46,9 @@ class Router {
 		// Ensure that we have the router variable available for templates.
 		$router = $this;
 
-		// Check if the requested file exists and error out if needed.
-		if (!$this->file_exists()) {
+		// Check if the requested file exists or if it's protected.
+		if (!$this->file_exists() || $this->is_protected_path()) {
+			// Render the Not Found error page.
 			$this->render_error_page("not_found", array(
 				"PAGE_TITLE" => "Page Not Found",
 				"ERROR_MESSAGE" => "Couldn't find the requested page '" .
@@ -117,7 +118,7 @@ class Router {
 	/**
 	 * Checks if the requested file actually exists.
 	 *
-	 * @return bool Does the requested file exist in the current theme?
+	 * @return boolean Does the requested file exist in the current theme?
 	 */
 	public function file_exists() {
 		return file_exists($this->get_file_path());
@@ -130,6 +131,15 @@ class Router {
 	 */
 	public function get_request_path() {
 		return $this->path;
+	}
+
+	/**
+	 * Checks if the requested page is considered to be protected.
+	 *
+	 * @return boolean Is the requested page protected?
+	 */
+	public function is_protected_path() {
+		return preg_match("/^\/?private/i", $this->get_request_path()) == 1;
 	}
 
 	/**
@@ -154,8 +164,8 @@ class Router {
 	/**
 	 * Sets the current theme name.
 	 *
-	 * @param string $name New theme name.
-	 * @param bool   $save Should we also save the theme in the cookies?
+	 * @param string  $name New theme name.
+	 * @param boolean $save Should we also save the theme in the cookies?
 	 */
 	public function set_theme($name, $save = true) {
 		// Clean up the theme name before setting it.
@@ -190,7 +200,7 @@ class Router {
 	 * Updates the cookies on the browser, if required, according to the current
 	 * request.
 	 *
-	 * @param bool Should we update the cookies no matter what?
+	 * @param boolean Should we update the cookies no matter what?
 	 */
 	protected function update_cookie($force = false) {
 		if (isset($_GET["theme"]) || $force) {
