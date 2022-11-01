@@ -116,3 +116,26 @@ function get_picklist_from_req() {
 	// Ok...
 	return NULL;
 }
+
+/**
+ * Checks for 'booleanic' values.
+ *
+ * @param any $value Value to be checked for booleaness.
+ * @return boolean Returns TRUE for "1", "true", "on" and "yes". FALSE for "0",
+ *                 "false", "off" and "no".
+ *
+ * @see https://www.php.net/manual/en/function.is-bool.php#124179
+ */
+function is_enabled($value) {
+	// Do a proper boolean conversion.
+	return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+}
+
+/**
+ * Checks if server uploads are enabled according to the configuration.
+ *
+ * @return boolean Are server uploads enabled?
+ */
+function is_server_upload_enabled() {
+	return is_enabled(PICKLE_ENABLE_SERVER_UPLOAD);
+}
