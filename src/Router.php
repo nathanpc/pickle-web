@@ -40,9 +40,17 @@ class Router {
 	 * happened or the page didn't exist.
 	 */
 	public function render_page() {
+		// Ensure that we have the router variable available for templates.
+		$router = $this;
+
 		// Check if the requested file exists and error out if needed.
 		if (!$this->file_exists()) {
-			$this->render_error_page();
+			$this->render_error_page("not_found", array(
+				"PAGE_TITLE" => "Page Not Found",
+				"ERROR_MESSAGE" => "Couldn't find the requested page '" .
+					$this->get_request_path() . "'"
+			));
+
 			return;
 		}
 
@@ -58,15 +66,37 @@ class Router {
 	}
 
 	/**
-	 * Renders an error page.
+	 * Renders a standardized error page in case something bad happens.
+	 *
+	 * @param  string $page Name of the template page in 'error_pages' to be rendered.
+	 * @param  array  $vars Array with the ('VARIABLE_NAME', 'VARIABLE_VALUE') pairs.
 	 */
-	protected function render_error_page() {
-		// Set response code and content type header.
-		http_response_code(404);
-		header("Content-Type: text/plain");
+	public function render_error_page($page, $vars) {
+		// Define the variables for the error page template.
+		foreach ($vars as $key => $value) {
+			define($key, $value);
+		}
 
-		// Render a simple error message.
-		echo "Couldn't find '" . $this->get_request_path() . "'\n";
+		// Render the error page.
+		require $this->get_file_path("/private/templates/error_pages/$page.php");
+	}
+
+	/**
+	 * Gets the internal file system path related to the browser requested page.
+	 *
+	 * @param string $path Clean path to require the underlying file. If NULL or
+	 *                     nothing is passed this will use the stored requested
+	 *                     path.
+	 *
+	 * @return string Requested file path in the file system.
+	 */
+	public function get_file_path($path = null) {
+		// Should we use the requested path?
+		if (is_null($path))
+			$path = $this->get_request_path();
+
+		// Build up a file system path.
+		return __DIR__ . "/../themes/" . $this->get_theme() . "/$path";
 	}
 
 	/**
@@ -85,16 +115,6 @@ class Router {
 	 */
 	public function get_request_path() {
 		return $this->path;
-	}
-
-	/**
-	 * Gets the internal file system path related to the browser requested page.
-	 *
-	 * @return string Requested file path in the file system.
-	 */
-	public function get_file_path() {
-		return __DIR__ . "/../themes/" . $this->get_theme() . "/" .
-			$this->get_request_path();
 	}
 
 	/**

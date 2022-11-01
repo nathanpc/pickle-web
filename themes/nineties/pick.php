@@ -7,19 +7,23 @@ try {
 
 	// Check if the requested archive wasn't found.
 	if (is_null($picklist)) {
-		return render_error_page('not_found', array(
+		$router->render_error_page('not_found', array(
 			'PAGE_TITLE' => 'Archive Not Found',
 			'ERROR_MESSAGE' => "The archive that you've requested was not " .
 				"found. Maybe check out the <a href=" . href('/archive') .
 				">archives page</a>?"
 		));
+
+		return;
 	}
 } catch (Exception $e) {
 	// Parsing error.
-	return render_error_page('exception', array(
+	$router->render_error_page('exception', array(
 		'PAGE_TITLE' => 'Parsing Error',
 		'EXCEPTION_OBJECT' => $e
 	));
+
+	return;
 }
 ?>
 
