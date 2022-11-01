@@ -23,22 +23,22 @@ function site_title($desc = NULL) {
 	// Check if we should use the PAGE_TITLE constant.
 	if (defined('PAGE_TITLE') && is_null($desc))
 		$desc = constant('PAGE_TITLE');
-	
+
 	// Prepend a description if the user wants.
 	if (!is_null($desc))
 		$title = $desc . ' - ' . $title;
-	
+
 	return $title;
 }
 
 /**
  * Checks if a parent page name matches the current page name.
- * 
+ *
  * @param  string  $parent Parent page script name without the extension.
  * @return boolean         Are the page names the same?
  */
 function is_parent_page($parent) {
-	return basename($_SERVER['PHP_SELF'], '.php') == $parent;
+	return basename($_GET['path'], '.php') == $parent;
 }
 
 /**
@@ -53,7 +53,7 @@ function href($loc) {
 
 /**
  * Gets the value of an URL parameter or uses a default if one wasn't provided.
- * 
+ *
  * @param  string $name    Parameter name (key in $_GET).
  * @param  any    $default Default value in case the parameter wasn't set.
  * @return any             Parameter value provided or the default.
@@ -69,7 +69,7 @@ function urlparam($name, $default = NULL) {
 
 /**
  * Automatically generate a link if a string is a URL.
- * 
+ *
  * @param  string $str String to be checked for an URL.
  * @return string      Same string if it's not a URL. Otherwise an anchor tag.
  */
@@ -91,26 +91,6 @@ function auto_link($str) {
 }
 
 /**
- * Generates a Bootstrap Navbar item.
- * 
- * @param  string $label    Label of the item.
- * @param  string $href     Relative URL this item points to or a full URL.
- * @param  string $pagename Destination page script name without the extension.
- * @return string           Fully-populated Bootstrap navbar item.
- */
-function nav_item($label, $href, $pagename) {
-	// Are we the current page?
-	$current = is_parent_page($pagename);
-
-	// Make sure we deal with relative URLs.
-	if ($href[0] == '/')
-		$href = href($href);
-
-	// Build up some HTML.
-	return '<li class="nav-item' . (($current) ? ' active' : '') . '"><a class="nav-link" href="' . $href . '">' . $label . (($current) ? ' <span class="sr-only">(current)</span>' : '') . '</a></li>';
-}
-
-/**
  * Gets a {@see PickLE\Document} from the data gathered from the request.
  *
  * @return PickLE\Document Pick list archive or NULL.
@@ -119,11 +99,11 @@ function get_picklist_from_req() {
 	// Are we just picking an stored archive?
 	if ($_SERVER['REQUEST_METHOD'] == 'GET')
 		return PickLE\Document::FromArchive(urlparam('archive', NULL));
-	
+
 	// Make sure there's no funny stuff going on..
 	if ($_SERVER['REQUEST_METHOD'] != 'POST')
 		return NULL;
-	
+
 	// Determine the correct way to parse this archive.
 	if (isset($_POST['archive-text'])) {
 		// User submitted the archive in text form.
@@ -135,21 +115,4 @@ function get_picklist_from_req() {
 
 	// Ok...
 	return NULL;
-}
-
-/**
- * Renders a standardized error page in case something bad happens.
- *
- * @param  string $page Name of the template page in 'error_pages' to be rendered.
- * @param  array  $vars Array with the ('VARIABLE_NAME', 'VARIABLE_VALUE') pairs.
- * @return string       Whatever the page 'require' returned.
- */
-function render_error_page($page, $vars) {
-	// Define the variables.
-	foreach ($vars as $key => $value) {
-		define($key, $value);
-	}
-
-	// Render the error page.
-	return require(__DIR__ . "/../templates/error_pages/$page.php");
 }

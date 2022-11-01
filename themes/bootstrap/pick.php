@@ -1,5 +1,3 @@
-<?php require_once __DIR__ . "/../config/functions.php"; ?>
-<?php require_once __DIR__ . "/../vendor/autoload.php"; ?>
 <?php $picklist = NULL; ?>
 <?php $lot_size = intval(urlparam('lotsize', 1)); ?>
 <?php
@@ -9,24 +7,28 @@ try {
 
 	// Check if the requested archive wasn't found.
 	if (is_null($picklist)) {
-		return render_error_page('not_found', array(
+		$router->render_error_page('not_found', array(
 			'PAGE_TITLE' => 'Archive Not Found',
 			'ERROR_MESSAGE' => "The archive that you've requested was not " .
 				"found. Maybe check out the <a href=" . href('/archive') .
 				">archives page</a>?"
 		));
+
+		return;
 	}
 } catch (Exception $e) {
 	// Parsing error.
-	return render_error_page('exception', array(
+	$router->render_error_page('exception', array(
 		'PAGE_TITLE' => 'Parsing Error',
 		'EXCEPTION_OBJECT' => $e
 	));
+
+	return;
 }
 ?>
 
 <?php define('PAGE_TITLE', 'Pick List'); ?>
-<?php require(__DIR__ . "/../templates/head.php"); ?>
+<?php require(__DIR__ . "/private/templates/head.php"); ?>
 
 <!-- Document Information -->
 <h3>
@@ -192,4 +194,4 @@ try {
 	}
 </script>
 
-<?php require(__DIR__ . "/../templates/footer.php"); ?>
+<?php require(__DIR__ . "/private/templates/footer.php"); ?>

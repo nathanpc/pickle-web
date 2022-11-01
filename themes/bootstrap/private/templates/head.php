@@ -1,8 +1,6 @@
+<?php require_once __DIR__ . "/../functions.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php require_once __DIR__ . "/../config/config.php"; ?>
-<?php require_once __DIR__ . "/../config/functions.php"; ?>
-<?php require_once __DIR__ . "/../vendor/autoload.php"; ?>
 
 <head>
 	<meta charset="utf-8" />

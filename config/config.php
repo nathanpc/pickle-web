@@ -27,6 +27,7 @@ function env_define_const($name, $default, $varname = null) {
 
 // General application branding.
 env_define_const('PICKLE_APP_NAME', 'PickLE', 'APP_NAME');
+env_define_const('PICKLE_APP_DEFAULT_THEME', 'bootstrap');
 
 // PickLE Perl microservice.
 env_define_const('PICKLE_API_PROTOCOL', 'http');

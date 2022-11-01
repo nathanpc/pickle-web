@@ -1,15 +1,17 @@
-<?php require(__DIR__ . "/../templates/head.php"); ?>
+<?php
+/**
+ * index.php
+ * The catch all script for every request in the project.
+ *
+ * @author Nathan Campos <nathan@innoveworkshop.com>
+ */
 
-<div class="jumbotron">
-	<h1 class="display-4">Welcome to <?= APP_NAME ?></h1>
+namespace PickLE;
 
-	<p class="lead">This web application allows you to work with <a href="https://github.com/nathanpc/pickle">PickLE</a> pick list documents anywhere you want, making it easy to build your next DIY project or start on that production run of your next product!</p>
+require_once __DIR__ . "/../config/config.php";
+require_once __DIR__ . "/../config/functions.php";
+require_once __DIR__ . "/../vendor/autoload.php";
 
-	<hr class="my-4">
-
-	<p>PickLE documents are simple, human-readable, component pick list declaration files for your projects. Gone are the days of printing out BOMs and crossing out parts you've already retrieved from your parts bins.</p>
-
-	<a class="btn btn-primary btn-lg" href="<?= href('/about') ?>" role="button">Learn more</a>
-</div>
-
-<?php require(__DIR__ . "/../templates/footer.php"); ?>
+// Setup our router and render the requested file.
+$router = new Router($_GET["path"]);
+$router->render_page();

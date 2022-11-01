@@ -1,5 +1,5 @@
 <?php define('PAGE_TITLE', 'Upload'); ?>
-<?php require(__DIR__ . "/../templates/head.php"); ?>
+<?php require(__DIR__ . "/private/templates/head.php"); ?>
 
 <h3>
 	<?= PAGE_TITLE ?>
@@ -97,4 +97,4 @@ R10 R12
 
 <br>
 
-<?php require(__DIR__ . "/../templates/footer.php"); ?>
+<?php require(__DIR__ . "/private/templates/footer.php"); ?>

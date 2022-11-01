@@ -12,7 +12,8 @@
 		"php": ">7.4",
 		"twbs/bootstrap": "~4.6",
 		"components/jquery": "~3.6",
-		"symfony/polyfill-php80": "~1.26"
+		"symfony/polyfill-php80": "~1.26",
+		"xantios/mimey": "~2.2"
 	},
 	"autoload": {
 		"psr-4": {

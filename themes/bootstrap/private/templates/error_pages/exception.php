@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . "/../../config/functions.php"; ?>
+<?php require_once __DIR__ . "/../../../../../config/functions.php"; ?>
 <?php http_response_code(500); ?>
 <?php $e = EXCEPTION_OBJECT; ?>
 
