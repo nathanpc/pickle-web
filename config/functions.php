@@ -26,7 +26,7 @@ function site_title($desc = NULL) {
 
 	// Prepend a description if the user wants.
 	if (!is_null($desc))
-		$title = $desc . ' - ' . $title;
+		$title = "$desc  - $title";
 
 	return $title;
 }
@@ -87,7 +87,7 @@ function auto_link($str) {
 	$str_url = ((isset($url['scheme'])) ? '' : 'https://') . $str;
 	$pretty_url = $url['host'] . ((isset($url['path'])) ? $url['path'] : '');
 
-	return '<a href="' . $str_url . '">' . $pretty_url . '</a>';
+	return "<a href=\"$str_url\">$pretty_url</a>";
 }
 
 /**
