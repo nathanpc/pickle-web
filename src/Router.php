@@ -169,7 +169,7 @@ class Router {
 	 */
 	public function set_theme($name, $save = true) {
 		// Clean up the theme name before setting it.
-		$this->theme = preg_replace('/[^A-Za-z]/', "", $name);
+		$this->theme = preg_replace('/[^A-Za-z0-9\-_]/', "", $name);
 
 		// Store the set theme in the browser cookies.
 		if ($save)

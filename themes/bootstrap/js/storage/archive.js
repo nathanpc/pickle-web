@@ -155,8 +155,16 @@ ArchiveStorage.prototype.appendCardTo = function (containerId) {
  * Navigates to the pick page for this local archive.
  */
 ArchiveStorage.prototype.browsePickPage = function () {
-	console.log("GO /pick/local/" + this.documentId);
 	formSubmit("POST", "/pick/local/" + this.documentId, {
+		"archive-text": this.archive.file
+	});
+};
+
+/**
+ * Uploads the archive to be stored in the server.
+ */
+ArchiveStorage.prototype.upload = function () {
+	formSubmit("POST", "/pick/upload", {
 		"archive-text": this.archive.file
 	});
 };

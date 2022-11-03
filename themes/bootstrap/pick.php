@@ -60,6 +60,11 @@ try {
 
 			<!-- Storage Actions -->
 			<div class="btn-group mr-5" role="group" aria-label="Storage actions button group">
+				<?php if (is_server_upload_enabled()) { ?>
+					<button type="button" class="btn btn-secondary" onclick="archive.upload()">
+						Upload to Server
+					</button>
+				<?php } ?>
 				<button type="button" class="btn btn-secondary" onclick="archive.save(); archive.browsePickPage();">
 					Save Locally
 				</button>

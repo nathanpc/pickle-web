@@ -95,7 +95,7 @@ class Document {
 
 		try {
 			// Parse the archive.
-			return Document::FromFile(Document::ARCHIVE_DIR . $name . '.' . Document::ARCHIVE_EXT, $name);
+			return self::FromFile(self::get_archive_file_path($name), $name);
 		} catch (\Exception $e) {
 			return NULL;
 		}
@@ -131,17 +131,31 @@ class Document {
 		$arr = array();
 
 		// Go through files in the archives directory.
-		foreach (scandir(Document::ARCHIVE_DIR) as $file) {
+		foreach (scandir(self::ARCHIVE_DIR) as $file) {
 			// Filter out any file that isn't a PickLE archive.
-			if (strcasecmp(pathinfo($file, PATHINFO_EXTENSION), Document::ARCHIVE_EXT) != 0)
+			if (strcasecmp(pathinfo($file, PATHINFO_EXTENSION), self::ARCHIVE_EXT) != 0)
 				continue;
-			
+
 			// Push the document into the array.
 			array_push($arr,
-				Document::FromArchive(basename($file, '.' . Document::ARCHIVE_EXT), false));
+				self::FromArchive(basename($file, '.' . self::ARCHIVE_EXT), false));
 		}
 
 		return $arr;
+	}
+
+	/**
+	 * Saves the document to the archives folder.
+	 */
+	public function save() {
+		// Create an archive file path.
+		$filename = self::get_archive_file_path($this->get_archive_name());
+
+		// TODO: Use PickLE Perl server to convert our object from JSON into a
+		//       proper PickLE document.
+
+		// Save contents to the file.
+		file_put_contents($filename, $this->get_source_code());
 	}
 
 	/**
@@ -335,7 +349,7 @@ class Document {
 	 * @param string $name Archive name of the document.
 	 */
 	public function set_archive_name($name) {
-		$this->archive_name = $name;
+		$this->archive_name = preg_replace('/[^A-Za-z0-9\-_]/', "", $name);
 		$this->generate_id();
 	}
 
@@ -438,5 +452,15 @@ class Document {
 	 */
 	public function get_source_code() {
 		return $this->source;
+	}
+
+	/**
+	 * Gets the full path to an archive document given a simple name slug.
+	 *
+	 * @param string $name Archive name.
+	 * @return string Full path to the archive document file.
+	 */
+	protected static function get_archive_file_path($name) {
+		return self::ARCHIVE_DIR . $name . '.' . self::ARCHIVE_EXT;
 	}
 }

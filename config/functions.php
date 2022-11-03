@@ -96,25 +96,45 @@ function auto_link($str) {
  * @return PickLE\Document Pick list archive or NULL.
  */
 function get_picklist_from_req() {
+	$picklist = NULL;
+
 	// Are we just picking an stored archive?
-	if ($_SERVER['REQUEST_METHOD'] == 'GET')
-		return PickLE\Document::FromArchive(urlparam('archive', NULL));
+	if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+		$picklist = PickLE\Document::FromArchive(urlparam('archive', NULL));
+	} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		// Determine the correct way to parse this archive.
+		if (isset($_POST['archive-text'])) {
+			// User submitted the archive in text form.
+			$picklist = PickLE\Document::FromString($_POST['archive-text']);
+		} else if (isset($_FILES['archive-file'])) {
+			// User submitted the archive in file form.
+			$picklist = PickLE\Document::FromFile($_FILES['archive-file']['tmp_name']);
+		}
 
-	// Make sure there's no funny stuff going on..
-	if ($_SERVER['REQUEST_METHOD'] != 'POST')
-		return NULL;
+		// Are we supposed to save this file to the server?
+		if (isset($_GET['upload'])) {
+			// Check if the user is allowed to do so.
+			if (!is_server_upload_enabled()) {
+				throw new \Exception("Archive uploads are disabled on this " .
+					"server. In order to enable them set the " .
+					"<code>PICKLE_ENABLE_SERVER_UPLOAD</code> environment " .
+					"variable to <code>true</code>.");
+			}
 
-	// Determine the correct way to parse this archive.
-	if (isset($_POST['archive-text'])) {
-		// User submitted the archive in text form.
-		return PickLE\Document::FromString($_POST['archive-text']);
-	} else if (isset($_FILES['archive-file'])) {
-		// User submitted the archive in file form.
-		return PickLE\Document::FromFile($_FILES['archive-file']['tmp_name']);
+			// Set the archive name according to what was given to us.
+			if (isset($_POST['name']))
+				$picklist->set_archive_name($_POST['name']);
+
+			// Save the archive to the server.
+			$picklist->save();
+		}
+	} else {
+		// Looks like some funny business is going on...
+		throw new \Exception("Invalid request method <code>" .
+			$_SERVER['REQUEST_METHOD'] . "</code>.");
 	}
 
-	// Ok...
-	return NULL;
+	return $picklist;
 }
 
 /**
