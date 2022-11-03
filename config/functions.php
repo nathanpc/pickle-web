@@ -127,6 +127,10 @@ function get_picklist_from_req() {
 
 			// Save the archive to the server.
 			$picklist->save();
+
+			// Redirect the user to the new archive page.
+			header("Location: " . $picklist->get_pick_url(), true, 302);
+			die();
 		}
 	} else {
 		// Looks like some funny business is going on...
