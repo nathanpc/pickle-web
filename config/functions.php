@@ -26,7 +26,7 @@ function site_title($desc = NULL) {
 
 	// Prepend a description if the user wants.
 	if (!is_null($desc))
-		$title = $desc . ' - ' . $title;
+		$title = "$desc  - $title";
 
 	return $title;
 }
@@ -87,7 +87,7 @@ function auto_link($str) {
 	$str_url = ((isset($url['scheme'])) ? '' : 'https://') . $str;
 	$pretty_url = $url['host'] . ((isset($url['path'])) ? $url['path'] : '');
 
-	return '<a href="' . $str_url . '">' . $pretty_url . '</a>';
+	return "<a href=\"$str_url\">$pretty_url</a>";
 }
 
 /**
@@ -96,23 +96,94 @@ function auto_link($str) {
  * @return PickLE\Document Pick list archive or NULL.
  */
 function get_picklist_from_req() {
+	$picklist = NULL;
+
 	// Are we just picking an stored archive?
-	if ($_SERVER['REQUEST_METHOD'] == 'GET')
-		return PickLE\Document::FromArchive(urlparam('archive', NULL));
+	if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+		$picklist = PickLE\Document::FromArchive(urlparam('archive', NULL));
+	} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		// Check if we are in fact trying to delete the archive.
+		if (isset($_GET['delete'])) {
+			// Check if the user is allowed to delete things from the server.
+			if (!is_server_upload_enabled()) {
+				throw new \Exception("Archive deletions are disabled on this " .
+					"server. In order to enable them set the " .
+					"<code>PICKLE_ENABLE_SERVER_UPLOAD</code> environment " .
+					"variable to <code>true</code>.");
+			}
 
-	// Make sure there's no funny stuff going on..
-	if ($_SERVER['REQUEST_METHOD'] != 'POST')
-		return NULL;
+			// Get the archive and check if it is valid.
+			$picklist = PickLE\Document::FromArchive(urlparam('delete', NULL));
+			if (is_null($picklist))
+				throw new \Exception("No valid archive was found to be deleted.");
 
-	// Determine the correct way to parse this archive.
-	if (isset($_POST['archive-text'])) {
-		// User submitted the archive in text form.
-		return PickLE\Document::FromString($_POST['archive-text']);
-	} else if (isset($_FILES['archive-file'])) {
-		// User submitted the archive in file form.
-		return PickLE\Document::FromFile($_FILES['archive-file']['tmp_name']);
+			// Delete the archive and redirect the user to the archives page.
+			$picklist->delete();
+			header("Location: /archive", true, 302);
+			die();
+		}
+
+		// Determine the correct way to parse this archive.
+		if (isset($_POST['archive-text'])) {
+			// User submitted the archive in text form.
+			$picklist = PickLE\Document::FromString($_POST['archive-text']);
+		} else if (isset($_FILES['archive-file'])) {
+			// User submitted the archive in file form.
+			$picklist = PickLE\Document::FromFile($_FILES['archive-file']['tmp_name']);
+		} else {
+			// You need to specify something!
+			throw new \Exception("No valid archive source was provided.");
+		}
+
+		// Are we supposed to save this file to the server?
+		if (isset($_GET['upload'])) {
+			// Check if the user is allowed to do so.
+			if (!is_server_upload_enabled()) {
+				throw new \Exception("Archive uploads are disabled on this " .
+					"server. In order to enable them set the " .
+					"<code>PICKLE_ENABLE_SERVER_UPLOAD</code> environment " .
+					"variable to <code>true</code>.");
+			}
+
+			// Set the archive name according to what was given to us.
+			if (isset($_POST['name']))
+				$picklist->set_archive_name($_POST['name']);
+
+			// Save the archive to the server.
+			$picklist->save();
+
+			// Redirect the user to the new archive page.
+			header("Location: " . $picklist->get_pick_url(), true, 302);
+			die();
+		}
+	} else {
+		// Looks like some funny business is going on...
+		throw new \Exception("Invalid request method <code>" .
+			$_SERVER['REQUEST_METHOD'] . "</code>.");
 	}
 
-	// Ok...
-	return NULL;
+	return $picklist;
+}
+
+/**
+ * Checks for 'booleanic' values.
+ *
+ * @param any $value Value to be checked for booleaness.
+ * @return boolean Returns TRUE for "1", "true", "on" and "yes". FALSE for "0",
+ *                 "false", "off" and "no".
+ *
+ * @see https://www.php.net/manual/en/function.is-bool.php#124179
+ */
+function is_enabled($value) {
+	// Do a proper boolean conversion.
+	return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+}
+
+/**
+ * Checks if server uploads are enabled according to the configuration.
+ *
+ * @return boolean Are server uploads enabled?
+ */
+function is_server_upload_enabled() {
+	return is_enabled(PICKLE_ENABLE_SERVER_UPLOAD);
 }

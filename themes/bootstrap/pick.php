@@ -60,6 +60,11 @@ try {
 
 			<!-- Storage Actions -->
 			<div class="btn-group mr-5" role="group" aria-label="Storage actions button group">
+				<?php if (is_server_upload_enabled()) { ?>
+					<button type="button" class="btn btn-secondary" onclick="archive.upload()">
+						Upload to Server
+					</button>
+				<?php } ?>
 				<button type="button" class="btn btn-secondary" onclick="archive.save(); archive.browsePickPage();">
 					Save Locally
 				</button>
@@ -190,6 +195,7 @@ try {
 		archive.archive.name = <?= json_encode($picklist->get_name(), JSON_FORCE_OBJECT) ?>;
 		archive.archive.description = <?= json_encode($picklist->get_description(), JSON_FORCE_OBJECT) ?>;
 		archive.archive.revision = <?= json_encode($picklist->get_revision(), JSON_FORCE_OBJECT) ?>;
+		archive.archive.filename = <?= json_encode($picklist->get_archive_name(), JSON_FORCE_OBJECT) ?>;
 		archive.archive.file = sourceBox.value;
 	}
 </script>

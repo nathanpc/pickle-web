@@ -10,9 +10,11 @@ RewriteRule ^archive/?$ archive.php [QSA,L]
 RewriteRule ^about/?$ about.php [QSA,L]
 RewriteRule ^upload/?$ upload.php [QSA,L]
 RewriteRule ^pick/?$ pick.php [QSA,L]
+RewriteRule ^pick/delete/([^\/]+)/?$ index.php?path=pick.php&delete=$1 [QSA,L]
+RewriteRule ^pick/local/([^\/]+)/?$ index.php?path=pick.php&local=$1 [QSA,L]
+RewriteRule ^pick/upload/?$ index.php?path=pick.php&upload=1 [QSA,L]
 RewriteRule ^pick/([^\/]+)/?$ index.php?path=pick.php&archive=$1 [QSA,L]
 RewriteRule ^pick/([^\/]+)/([0-9]+)/?$ index.php?path=pick.php&archive=$1&lotsize=$2 [QSA,L]
-RewriteRule ^pick/local/([^\/]+)/?$ index.php?path=pick.php&local=$1 [QSA,L]
 RewriteRule ^(.+)$ index.php?path=$1 [QSA,L]
 
 # Setup PHP configuration for debug.

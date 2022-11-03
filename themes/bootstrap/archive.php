@@ -37,7 +37,7 @@
 						<h5 class="card-title"><?= $doc->get_name() ?></h5>
 						<p class="card-text"><?= $doc->get_description() ?></p>
 
-						<a href="<?= href('/pick/' . $doc->get_archive_name()) ?>" class="card-link">
+						<a href="<?= $doc->get_pick_url() ?>" class="card-link">
 							Rev <?= $doc->get_revision() ?>
 						</a>
 					</div>
