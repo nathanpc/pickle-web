@@ -195,6 +195,7 @@ try {
 		archive.archive.name = <?= json_encode($picklist->get_name(), JSON_FORCE_OBJECT) ?>;
 		archive.archive.description = <?= json_encode($picklist->get_description(), JSON_FORCE_OBJECT) ?>;
 		archive.archive.revision = <?= json_encode($picklist->get_revision(), JSON_FORCE_OBJECT) ?>;
+		archive.archive.filename = <?= json_encode($picklist->get_archive_name(), JSON_FORCE_OBJECT) ?>;
 		archive.archive.file = sourceBox.value;
 	}
 </script>

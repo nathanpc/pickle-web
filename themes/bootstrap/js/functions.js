@@ -138,7 +138,7 @@ function congratsConfetti(duration) {
  * 
  * @param {string} method HTTP method of the request.
  * @param {string} action Equivalent to the <form> action attribute.
- * @param {object} params Parameters of the request.
+ * @param {object} [params] Parameters of the request.
  */
 function formSubmit(method, action, params) {
 	// Create the form element.
@@ -146,19 +146,21 @@ function formSubmit(method, action, params) {
 	form.method = method;
 	form.action = action;
 
-	// Go through the parameters.
-	for (var key in params) {
-		// Is this key actually ours?
-		if (!params.hasOwnProperty(key))
-			continue;
+	if (params !== undefined) {
+		// Go through the parameters.
+		for (var key in params) {
+			// Is this key actually ours?
+			if (!params.hasOwnProperty(key))
+				continue;
 
-		// Build up the parameter hidden field.
-		var hidden = document.createElement("input");
-		hidden.type = "hidden";
-		hidden.name = key;
-		hidden.value = params[key];
+			// Build up the parameter hidden field.
+			var hidden = document.createElement("input");
+			hidden.type = "hidden";
+			hidden.name = key;
+			hidden.value = params[key];
 
-		form.appendChild(hidden);
+			form.appendChild(hidden);
+		}
 	}
 
 	// The form must be placed in the body before submitting.

@@ -102,6 +102,27 @@ function get_picklist_from_req() {
 	if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		$picklist = PickLE\Document::FromArchive(urlparam('archive', NULL));
 	} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		// Check if we are in fact trying to delete the archive.
+		if (isset($_GET['delete'])) {
+			// Check if the user is allowed to delete things from the server.
+			if (!is_server_upload_enabled()) {
+				throw new \Exception("Archive deletions are disabled on this " .
+					"server. In order to enable them set the " .
+					"<code>PICKLE_ENABLE_SERVER_UPLOAD</code> environment " .
+					"variable to <code>true</code>.");
+			}
+
+			// Get the archive and check if it is valid.
+			$picklist = PickLE\Document::FromArchive(urlparam('delete', NULL));
+			if (is_null($picklist))
+				throw new \Exception("No valid archive was found to be deleted.");
+
+			// Delete the archive and redirect the user to the archives page.
+			$picklist->delete();
+			header("Location: /archive", true, 302);
+			die();
+		}
+
 		// Determine the correct way to parse this archive.
 		if (isset($_POST['archive-text'])) {
 			// User submitted the archive in text form.
@@ -109,6 +130,9 @@ function get_picklist_from_req() {
 		} else if (isset($_FILES['archive-file'])) {
 			// User submitted the archive in file form.
 			$picklist = PickLE\Document::FromFile($_FILES['archive-file']['tmp_name']);
+		} else {
+			// You need to specify something!
+			throw new \Exception("No valid archive source was provided.");
 		}
 
 		// Are we supposed to save this file to the server?

@@ -159,6 +159,20 @@ class Document {
 	}
 
 	/**
+	 * Deletes the document from the archives folder.
+	 */
+	public function delete() {
+		// Create an archive file path.
+		$filename = self::get_archive_file_path($this->get_archive_name());
+
+		// Delete the document from the file system.
+		if (!unlink($filename)) {
+			throw new \Exception("An error occurred while trying to delete " .
+				"the archive '" . $this->get_archive_name() . "'.");
+		}
+	}
+
+	/**
 	 * Parses the contents of a document using the parsing microservice.
 	 *
 	 * @param string $contents Contents of a PickLE document.

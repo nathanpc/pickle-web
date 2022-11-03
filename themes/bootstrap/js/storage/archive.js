@@ -21,6 +21,7 @@ function ArchiveStorage(documentId) {
 		name: null,
 		description: null,
 		revision: null,
+		filename: null,
 		file: ""
 	};
 }
@@ -79,7 +80,7 @@ ArchiveStorage.prototype.save = function () {
 };
 
 /**
- * Deletes the archive from storage.
+ * Deletes the archive from storage (be it locally or on the server).
  * 
  * @param {boolean} [askConfirm=false] Ask the user for confirmation?
  */
@@ -90,6 +91,12 @@ ArchiveStorage.prototype.delete = function (askConfirm) {
 	if (askConfirm) {
 		if (!window.confirm("Are you sure you want to delete this pick list archive?"))
 			return;
+	}
+
+	// Check if we should remove the item from the server.
+	if (!this.isStoredLocally()) {
+		formSubmit("POST", "/pick/delete/" + this.archive.filename);
+		return;
 	}
 
 	// Remove the item from local storage and redirect the user to the archive page.
@@ -159,6 +166,15 @@ ArchiveStorage.prototype.browsePickPage = function () {
 		"archive-text": this.archive.file
 	});
 };
+
+/**
+ * Checks if the archive is currently being stored in localStorage.
+ *
+ * @returns {boolean} True if the archive is currently stored in localStorage.
+ */
+ArchiveStorage.prototype.isStoredLocally = function () {
+	return localStorage.getItem(this.storageKey) !== null;
+}
 
 /**
  * Uploads the archive to be stored in the server.
