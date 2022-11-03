@@ -455,6 +455,15 @@ class Document {
 	}
 
 	/**
+	 * Gets the pick page URL for this archive.
+	 *
+	 * @return string Pick page URL for this archive.
+	 */
+	public function get_pick_url() {
+		return href('/pick/' . $this->get_archive_name());
+	}
+
+	/**
 	 * Gets the full path to an archive document given a simple name slug.
 	 *
 	 * @param string $name Archive name.
