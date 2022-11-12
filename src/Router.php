@@ -180,9 +180,15 @@ class Router {
 	 * Sets the current theme based on the browser/session context.
 	 */
 	public function set_theme_from_context() {
-		// Check if we are setting a theme.
+		// Check if we are setting a theme from a parameter.
 		if (isset($_GET["theme"])) {
 			$this->set_theme($_GET["theme"]);
+			return;
+		}
+
+		// Check if we are setting a theme using the quick change widget.
+		if (isset($_POST["theme"])) {
+			$this->set_theme($_POST["theme"]);
 			return;
 		}
 

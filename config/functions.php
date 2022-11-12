@@ -166,6 +166,28 @@ function get_picklist_from_req() {
 }
 
 /**
+ * Gets a list of the theme names available for setting.
+ *
+ * @return array List of the available theme names.
+ */
+function get_theme_list() {
+	$themes = array();
+	$theme_dir = __DIR__ . "/../themes";
+
+	// Go through the directory's contents.
+	foreach (scandir($theme_dir) as $item) {
+		// Ignore ., .., hidden items, and non-directories.
+		if (str_starts_with($item, ".") || !is_dir("$theme_dir/$item"))
+			continue;
+
+		// Append theme directory to our collection.
+		array_push($themes, $item);
+	}
+
+	return $themes;
+}
+
+/**
  * Checks for 'booleanic' values.
  *
  * @param any $value Value to be checked for booleaness.
