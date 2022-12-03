@@ -2,6 +2,6 @@
 <?php define('PAGE_SUBTITLE', 'The best way to create and use pick lists'); ?>
 <?php require(__DIR__ . "/private/templates/head.php"); ?>
 
-<p>TODO: Put some content in here.</p>
+<?php require(__DIR__ . "/../_common/about_text.html"); ?>
 
 <?php require(__DIR__ . "/private/templates/footer.php"); ?>
