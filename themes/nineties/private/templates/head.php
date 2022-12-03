@@ -5,6 +5,9 @@
 <head>
 	<meta charset="utf-8" />
 	<title><?= site_title() ?></title>
+
+	<!-- Styling -->
+	<link rel="stylesheet" href="<?= href('/css/main.css') ?>">
 </head>
 
 <body>

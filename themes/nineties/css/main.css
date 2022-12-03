@@ -1,0 +1,28 @@
+/**
+ * main.css
+ * Add a bit of styling to the nineties theme.
+ *
+ * @author Nathan Campos <nathan@innoveworkshop.com>
+ */
+
+p code {
+	color: #e83e8c;
+}
+
+.code-block {
+	background-color: lightgray;
+	padding: 10px 15px;
+}
+
+.badge {
+	vertical-align: super;
+	font-size: smaller;
+}
+
+.badge-danger {
+	color: #e83e8c;
+}
+
+.lead {
+	font-size: 1.2em;
+}
