@@ -177,7 +177,7 @@ function get_theme_list() {
 	// Go through the directory's contents.
 	foreach (scandir($theme_dir) as $item) {
 		// Ignore ., .., hidden items, and non-directories.
-		if (str_starts_with($item, ".") || !is_dir("$theme_dir/$item"))
+		if (preg_match("/^[\._]/", $item) || !is_dir("$theme_dir/$item"))
 			continue;
 
 		// Append theme directory to our collection.
