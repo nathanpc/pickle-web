@@ -21,7 +21,7 @@
 	simple example:
 </p>
 
-<pre><code>Name: Example Project
+<pre class="code-block"><code>Name: Example Project
 Revision: A
 Description: A very simple pick list example.
 Website: https://example.com/pickle

@@ -9,6 +9,11 @@ main {
 	margin-top: 85px;
 }
 
+.code-block {
+	background-color: #e9ecef;
+	padding: 10px 15px;
+}
+
 .refdes-crossed {
 	text-decoration: line-through;
 	opacity: 50%;
