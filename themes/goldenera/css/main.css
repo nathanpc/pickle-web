@@ -1,0 +1,187 @@
+/**
+ * main.css
+ * Add a bit of styling to the golden era theme.
+ *
+ * @author Nathan Campos <nathan@innoveworkshop.com>
+ */
+
+body {
+	margin: 0 auto 0 auto;
+	max-width: 750px;
+	font-family: /*"Helvetica",*/ "Verdana";
+}
+
+a, a:visited, a:hover, a:active {
+	color: darkblue;
+}
+
+p code {
+	color: #e83e8c;
+}
+
+/* Navbar */
+#navbar {
+	padding: 5px;
+	border-bottom: 1px dotted black;
+}
+
+#navbar > h1 {
+	display: inline;
+	margin: 0 10px 0 0;
+	font-size: 1.2em;
+}
+
+#navbar > .nav {
+	display: inline;
+	font-size: 0.85em;
+}
+
+#navbar .nav-link {
+	text-decoration: none;
+}
+
+/* Main */
+
+#main {
+	margin: 1em 5px 1em 5px;
+}
+
+h2.section {
+	font-size: 1.2em;
+	margin: 10px 0 10px 0;
+}
+
+/* Footer */
+
+#footer {
+	padding: 5px;
+	border-top: 1px dotted black;
+	text-align: center;
+}
+
+#footer > .copyright {
+	margin-top: 0.4em;
+	font-size: 0.85em;
+}
+
+/* Archive List */
+
+#archives-container {
+	width: 100%;
+}
+
+#archives-container > .archive-block {
+	padding: 3px 10px;
+	border: 1px dotted gray;
+	font-size: 0.9em;
+}
+
+.archive-block > div {
+	margin: 5px 0;
+}
+
+.archive-block .title {
+	font-weight: bolder;
+	font-size: 1.1em;
+}
+
+.archive-block .desc {
+	color: darkgray;
+}
+
+.revisions-list > a {
+	color: green;
+	margin-right: 7px;
+}
+
+/* Pick List */
+
+.picklist-category > h3 {
+	margin-top: 0;
+	margin-bottom: 0.5em;
+	font-weight: normal;
+	font-size: 1.1em;
+	color: darkgray;
+}
+
+.picklist-category > table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.pick-item {
+	width: 100%;
+	border: 1px dotted gray;
+}
+
+.pick-item > td {
+	padding: 5px 10px;
+}
+
+.pick-item .picked {
+	text-align: center;
+}
+
+.pick-item .quantity {
+	font-weight: bold;
+	text-align: center;
+}
+
+.pick-item .desc-col {
+	width: 100%;
+	font-size: 0.9em;
+}
+
+.pick-item .value {
+	margin-left: 1em;
+	color: brown;
+}
+
+.pick-item .package {
+	margin-left: 1em;
+	color: darkgoldenrod;
+}
+
+.pick-item .desc {
+	color: darkgray;
+}
+
+.pick-item .refdes-list {
+	color: green;
+}
+
+.pick-item .refdes {
+	margin-right: 7px;
+}
+
+/* Misc. */
+
+.hidden {
+	display: none;
+}
+
+.centered {
+	text-align: center;
+}
+
+.code-block {
+	background-color: lightgray;
+	padding: 10px 15px;
+}
+
+.badge {
+	vertical-align: super;
+	font-size: smaller;
+}
+
+.badge-danger {
+	color: #e83e8c;
+}
+
+.lead {
+	font-size: 1.2em;
+}
+
+.pickle {
+	color: green;
+}
