@@ -12,6 +12,7 @@ p code {
 .code-block {
 	background-color: lightgray;
 	padding: 10px 15px;
+	overflow: auto;
 }
 
 .badge {
