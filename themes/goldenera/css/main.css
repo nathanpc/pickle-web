@@ -19,6 +19,13 @@ p code {
 	color: #e83e8c;
 }
 
+mark {
+	padding: 0 3px;
+	border: 1px solid darkgray;
+	border-radius: 3px;
+	background-color: whitesmoke;
+}
+
 /* Navbar */
 #navbar {
 	padding: 5px;
@@ -165,8 +172,9 @@ h2.section {
 }
 
 .code-block {
-	background-color: lightgray;
 	padding: 10px 15px;
+	background-color: papayawhip;
+	overflow: auto;
 }
 
 .badge {

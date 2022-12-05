@@ -4,15 +4,20 @@
 
 <style type="text/css">
 h4 {
-	font-size: 1.5em;
+	margin: 0;
+	font-size: 1.2em;
 }
 
 h5 {
-	font-size: 1.17em;
+	margin: 0;
+	font-size: 1.05em;
 }
 
 h6 {
+	margin: 0;
+	font-weight: normal;
 	font-size: 1em;
+	color: darkgreen;
 }
 </style>
 
