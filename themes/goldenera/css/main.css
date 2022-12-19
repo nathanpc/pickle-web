@@ -161,10 +161,30 @@ h2.section {
 	margin-right: 7px;
 }
 
+/* Upload */
+
+h2.section {
+	margin-top: 0;
+	margin-bottom: 0.5em;
+
+	font-weight: normal;
+	font-size: 1.1em;
+
+	color: darkgray;
+}
+
+#archive-text {
+	width: 95%;
+}
+
 /* Misc. */
 
 .hidden {
 	display: none;
+}
+
+.w-100 {
+	width: 100%;
 }
 
 .centered {

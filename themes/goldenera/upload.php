@@ -2,21 +2,18 @@
 <?php define('PAGE_SUBTITLE', 'Try out on your own pick lists'); ?>
 <?php require(__DIR__ . "/private/templates/head.php"); ?>
 
-<div class="centered">
-	<!-- File Submission -->
-	<h2 class="section">Upload File</h2>
-	<form method="POST" action="<?= href('/pick') ?>" enctype="multipart/form-data">
-		<input type="file" id="archive-file" name="archive-file" required>
-		<button type="submit">Submit Archive</button>
-	</form>
-	<br>
+<!-- File Submission -->
+<h2 class="section">Upload File</h2>
+<form method="POST" action="<?= href('/pick') ?>" enctype="multipart/form-data">
+	<input type="file" id="archive-file" name="archive-file" required>
+	<button type="submit">Submit Archive</button>
+</form>
+<br>
 
-	<hr>
-
-	<!-- Text Submission -->
-	<h2 class="section">Source Code</h2>
-	<form method="POST" action="<?= href('/pick') ?>" enctype="multipart/form-data">
-		<textarea id="archive-text" name="archive-text" rows="20" cols="100" required>Name: Example Archive
+<!-- Text Submission -->
+<h2 class="section">Upload Text</h2>
+<form method="POST" action="<?= href('/pick') ?>" enctype="multipart/form-data">
+	<textarea id="archive-text" name="archive-text" rows="30" cols="80" required>Name: Example Archive
 Revision: A
 Description: A very detailed description.
 Website: https://innoveworkshop.com/
@@ -50,11 +47,9 @@ R2 R4 R5 R6 R17 R19
 
 [ ]     2       R0805   (720)   "Resistor"      [R0805]
 R10 R12</textarea>
-		<br>
-		<br>
-		<button type="submit">Parse Text</button>
-	</form>
 	<br>
-</div>
+	<br>
+	<button type="submit">Submit Source Code</button>
+</form>
 
 <?php require(__DIR__ . "/private/templates/footer.php"); ?>
