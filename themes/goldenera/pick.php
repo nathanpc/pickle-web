@@ -70,12 +70,12 @@ try {
 		<table>
 			<tbody>
 				<?php foreach ($category->get_components() as $component) { ?>
-					<tr id="<?= $component->get_id() ?>" class="pick-item">
+					<tr id="<?= $component->get_id() ?>" class="pick-item" onclick="toggleCheckboxCheck(event, 'chk-<?= $component->get_id() ?>')" ondblclick="preventDblClickHighlight(event)">
 						<!-- Pick State -->
-						<td class="picked"><input type="checkbox"></td>
+						<td class="picked"><input type="checkbox" id="chk-<?= $component->get_id() ?>"></td>
 
 						<!-- Quantity -->
-						<td class="quantity">
+						<td class=" quantity">
 							<?= $component->get_quantity() * $lot_size ?>
 						</td>
 
@@ -102,7 +102,7 @@ try {
 							<!-- Reference Designators -->
 							<div class="refdes-list">
 								<?php foreach ($component->get_refdes() as $refdes) { ?>
-									<span class="refdes"><?= $refdes ?></span>
+									<span class="refdes" id="<?= $component->get_id() . '-refdes-' . strtolower($refdes) ?>" onclick="toggleStrikethrough(this, event)" ondblclick="preventDblClickHighlight(event)"><?= $refdes ?></span>
 								<?php } ?>
 							</div>
 						</td>
@@ -116,10 +116,13 @@ try {
 <?php } ?>
 
 <!-- Source Code -->
-<div id="source-code" class="hidden">
+<div id=" source-code" class="hidden">
 	<hr>
 	<textarea rows="20" cols="100"><?= $picklist->get_source_code() ?></textarea>
 	<br>
 </div>
+
+<!-- Interactivity -->
+<script src="<?= href('/js/picking.js') ?>"></script>
 
 <?php require(__DIR__ . "/private/templates/footer.php"); ?>

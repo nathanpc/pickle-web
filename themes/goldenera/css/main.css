@@ -191,6 +191,10 @@ h2.section {
 	text-align: center;
 }
 
+.strikethrough {
+	text-decoration: line-through;
+}
+
 .code-block {
 	padding: 10px 15px;
 	background-color: papayawhip;
